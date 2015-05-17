@@ -4,43 +4,139 @@
 
 'use strict';
 
+const  race = {
+  name: "Hood to Coast 2015",
+  details: "Details here",
+  legs: [
+    {},
+    {},
+    {}
+  ],
+  plan: {
+    legs: [
+      {
+        name: "Leg 1",
+        abbreviation: "L1",
+        timeExpected: 9857987597,
+        timeStarted: 123123123123,
+        timeCompleted: 0,
+        racer: {
+          id: 1,
+          name: "Chris"
+        }
+      },
+      {
+        name: "Leg 2",
+        abbreviation: "L2",
+        timeExpected: 9857987597,
+        timeStarted: 0,
+        timeCompleted: 0,
+        racer: {
+          id: 2,
+          name: "Dalene"
+        }
+      },
+      {
+        name: "Leg 3",
+        abbreviation: "L3",
+        timeExpected: 9857987597,
+        timeStarted: 0,
+        timeCompleted: 0,
+        racer: {
+          id: 3,
+          name: "Tyler"
+        }
+      }
+    ]
+  }
+};
+
+const racers = [
+  {
+    id: 1,
+    name: "Chris",
+    group: "Van 1",
+    team: "The Cron Runs"
+  }
+];
 
 class Leg extends React.Component {
   render() {
     return (
-      <div className="leg">
-        <div className="leg-num">{this.props.index}</div>
-        <div className="leg-racer-name">{this.props.data.legRacerName}</div>
-      </div>
-    )
+      <li className="list-group-item">
+        <span className="label label-default">{this.props.data.abbreviation}</span> <span>{this.props.data.racer.name}</span> <span className="badge">00:35:32 / {this.props.data.timeExpected}</span>
+      </li>
+    );
   }
 }
 
-class LegsContainer extends React.Component {
+class Timer extends React.Component {
+  render() {
+    var formattedDuration = moment.utc(this.props.ms).format("HH:mm:ss");
+    return (
+      <span>{formattedDuration}</span>
+    );
+  }
+}
+Timer.defaultProps = {ms: 0};
+
+class RelayBloomApp extends React.Component {
+  constructor() {
+    this.state = {
+      raceStart : 0,
+      elapsed: 0,
+      isRunning: false,
+      currentLeg: 0
+    };
+    this.handoff = this.handoff.bind(this);
+    this.tick = this.tick.bind(this);
+  }
   render() {
     return (
       <div className="RELAYbloomApp">
-        <div className="Controls">
-          <button className="Button"  type="button">Handoff</button>
-          <button className="Button--secondary" type="button">Button</button>
-          <button className="Button--secondary" type="button">Button</button>
-        </div>
-        <div className="Results">
-          {legs.map(function(leg, index) {
-            return <Leg key={leg.key} index={index+1} data={leg}/>
-          })}
+        <h1 className="text-center"><small><i className="fa fa-clock-o  "></i> <strong><Timer ms={this.state.elapsed}/></strong> / 48:32:17</small></h1>
+        <button type="button" onClick={this.handoff} className="btn btn-block btn-warning text-uppercase handoff-button">Handoff</button>
+
+        <div className="panel panel-primary">
+          <div className="panel-heading"><span className="label label-info">L1-L6</span> <span>Van 1</span></div>
+          <div className="panel-body">
+            <h1>Jen <small>00:35:32</small></h1>
+            <p>Total time: 343:343</p>
+            <p><span>More stats about legs goes here</span><span className="label label-default">L1</span></p>
+          </div>
+
+          <ul className="list-group">
+            {this.props.appdata.plan.legs.map(function(leg, index) {
+              return <Leg key={leg.key} index={index+1} data={leg}/>
+            })}
+          </ul>
+
         </div>
       </div>
     );
   }
+  handoff() {
+    console.log('handoff clicked');
+
+    if (this.state.isRunning) {
+      this.setState({isRunning: false});
+      clearInterval( this.interval );
+    }
+    else {
+      this.setState({
+        raceStart: moment(),
+        isRunning: true
+      });
+      this.interval = setInterval(this.tick.bind(this), 1000);
+    }
+
+  }
+  tick() {
+    this.setState({ elapsed: moment().diff(this.state.raceStart) });
+  }
 }
-const legs = [
-  {legRacerName: "Racer 1"},
-  {legRacerName: "Racer 2"},
-  {legRacerName: "Racer 3"},
-  {legRacerName: "Racer 4"}
-];
-React.render(<LegsContainer legs={legs}/>, document.getElementById('relayBloom'));
+
+React.render(<RelayBloomApp appdata={race}/>, document.getElementById('relayBloom'));
 
 const initialState = {
   start: 0,
