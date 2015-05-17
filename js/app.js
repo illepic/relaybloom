@@ -13,6 +13,7 @@ const  race = {
     {}
   ],
   plan: {
+    expectedDuration: 174737000,
     legs: [
       {
         name: "Leg 1",
@@ -72,7 +73,8 @@ class Leg extends React.Component {
 
 class Timer extends React.Component {
   render() {
-    var formattedDuration = moment.utc(this.props.ms).format("HH:mm:ss");
+    console.log(this.props.ms);
+    var formattedDuration = moment.utc(this.props.ms).format("hh:mm:ss");
     return (
       <span>{formattedDuration}</span>
     );
@@ -82,19 +84,21 @@ Timer.defaultProps = {ms: 0};
 
 class RelayBloomApp extends React.Component {
   constructor() {
+    // Bind events
+    this.handoff = this.handoff.bind(this);
+    this.tick = this.tick.bind(this);
+    // Set state
     this.state = {
       raceStart : 0,
       elapsed: 0,
       isRunning: false,
       currentLeg: 0
     };
-    this.handoff = this.handoff.bind(this);
-    this.tick = this.tick.bind(this);
   }
   render() {
     return (
       <div className="RELAYbloomApp">
-        <h1 className="text-center"><small><i className="fa fa-clock-o  "></i> <strong><Timer ms={this.state.elapsed}/></strong> / 48:32:17</small></h1>
+        <h1 className="text-center"><small><i className="fa fa-clock-o  "></i> <strong><Timer ms={this.state.elapsed}/></strong> / <Timer ms={this.props.appdata.plan.expectedDuration}/></small></h1>
         <button type="button" onClick={this.handoff} className="btn btn-block btn-warning text-uppercase handoff-button">Handoff</button>
 
         <div className="panel panel-primary">
