@@ -2,11 +2,10 @@
 
 import React from 'react';
 import Router from 'react-router';
+import Moment from 'moment';
 
 import RelayBloomNav from '../components/NavBar';
 const RouteHandler = Router.RouteHandler;
-
-import RaceData from '../data/race';
 
 require('bootswatch/flatly/bootstrap.min.css');
 require('./app.css');
@@ -28,21 +27,22 @@ export default class App extends React.Component {
     return (
       <div>
         <RelayBloomNav />
-        <RouteHandler appdata={RaceData}/>
+        <RouteHandler/>
       </div>
     );
   }
 
   handoff() {
-    console.log('handoff clicked');
+    console.log('handoff called from app');
 
+    // for now stop it
     if (this.state.isRunning) {
       this.setState({isRunning: false});
       clearInterval( this.interval );
     }
     else {
       this.setState({
-        raceStart: moment(),
+        raceStart: Moment(),
         isRunning: true
       });
       this.interval = setInterval(this.tick.bind(this), 1000);
@@ -50,6 +50,6 @@ export default class App extends React.Component {
 
   }
   tick() {
-    this.setState({ elapsed: moment().diff(this.state.raceStart) });
+    this.setState({ elapsed: Moment().diff(this.state.raceStart) });
   }
 }

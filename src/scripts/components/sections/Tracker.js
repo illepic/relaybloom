@@ -3,17 +3,20 @@
 import React from 'react';
 import { Button, Glyphicon } from 'react-bootstrap';
 
+import Timer from '../Timer';
 import Leg from '../Leg';
 
 export default class Tracker extends React.Component {
   constructor(props) {
     super(props);
+    this.handleHandoff = this.handleHandoff.bind(this);
   }
   render() {
+    console.log(this.state);
     return (
       <div className="RELAYbloomTracker">
 
-        <h1 className="text-center"><small><Glyphicon glyph='time'/><strong><span> 73:00:00</span></strong><span> / </span><span>34:32:22</span></small></h1>
+        <h1 className="text-center"><small><Glyphicon glyph='time'/> <strong><Timer /></strong><span> / </span><Timer ms={this.props.appdata.plan.expectedDuration}/></small></h1>
         <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handleHandoff}>Handoff</Button>
 
         <div className="panel panel-primary">
@@ -26,7 +29,7 @@ export default class Tracker extends React.Component {
 
           <ul className="list-group">
             {this.props.appdata.plan.legs.map(function(leg, index) {
-              return (<Leg key={leg.key} index={index+1} data={leg}/>);
+              return (<Leg key={leg.abbreviation} index={index+1} data={leg}/>);
             })}
           </ul>
 
@@ -34,6 +37,10 @@ export default class Tracker extends React.Component {
 
       </div>
     );
+  }
+  handleHandoff() {
+    console.log('handoff handled from tracker');
+    this.props.handoff('hello string');
   }
 }
 
