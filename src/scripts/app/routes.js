@@ -4,10 +4,10 @@ import React from 'react';
 import {Route, DefaultRoute, NotFoundRoute} from 'react-router';
 
 import App from './App';
-import Tracker from '../components/Tracker';
-import Team from '../components/Team';
-import Profile from '../components/Profile';
-import Races from '../components/Races';
+import Tracker from '../components/sections/Tracker';
+import Team from '../components/sections/Team';
+import Profile from '../components/sections/Profile';
+import Races from '../components/sections/Races';
 
 export default (
   <Route path="/" handler={App}>

@@ -5,7 +5,7 @@ import { Navbar, Nav, NavItem, Glyphicon } from 'react-bootstrap';
 import { NavItemLink } from 'react-router-bootstrap';
 
 let relayBloomIcon = (
-  <span><Glyphicon glyph='road'/> <span>RELAYbloom</span></span>
+  <a href="#"><Glyphicon glyph='road'/> <span>RELAYbloom</span></a>
 );
 
 export default class RelayBloomNav extends React.Component {

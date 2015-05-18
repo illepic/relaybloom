@@ -9,6 +9,7 @@
     "quotes": "single",
     "no-unused-vars": false,
     "new-cap": false,
-    "no-undef": false
+    "no-undef": false,
+    "space-infix-ops": false
   }
 }
