@@ -4,11 +4,11 @@ import React from 'react';
 import Router from 'react-router';
 import Moment from 'moment';
 
-import RelayBloomNav from '../components/NavBar';
+import RelayBloomNav from './NavBar';
 const RouteHandler = Router.RouteHandler;
 
 require('bootswatch/flatly/bootstrap.min.css');
-require('./app.css');
+//require('./../../src/scripts/app/app.css');
 
 
 export default class App extends React.Component {
@@ -23,6 +23,7 @@ export default class App extends React.Component {
       currentLeg: 0
     };
   }
+
   render() {
     return (
       <div>
