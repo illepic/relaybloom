@@ -7,9 +7,9 @@ import React from 'react';
 
 // A way for us to pass props to just this
 export default class TrackerWrapper extends React.Component {
-  //render() {
-  //  return (
-  //    <Tracker appdata={RaceData}/>
-  //  );
-  //}
+  render() {
+    return null;
+  }
 }
+
+//<Tracker appdata={RaceData}/>
