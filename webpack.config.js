@@ -1,79 +1,86 @@
-/*
- * Webpack development server configuration
- *
- * This file is set up for serving the webpack-dev-server, which will watch for changes and recompile as required if
- * the subfolder /webpack-dev-server/ is visited. Visiting the root will not automatically reload.
- */
-'use strict';
+var path = require('path');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var merge = require('webpack-merge');
 var webpack = require('webpack');
 
-module.exports = {
+var TARGET = process.env.TARGET;
+var ROOT_PATH = path.resolve(__dirname);
 
-  output: {
-    filename: 'main.js',
-    publicPath: '/assets/'
-  },
-
-  cache: true,
-  debug: true,
-  devtool: 'eval',
-  entry: [
-      'webpack/hot/only-dev-server',
-      './src/scripts/app/Main.js'
-  ],
-
-  stats: {
-    colors: true,
-    reasons: true
-  },
-
+var common = {
+  entry: [path.resolve(ROOT_PATH, 'app/main')],
   resolve: {
-    extensions: ['', '.js'],
-    alias: {
-      'styles': '../../../src/styles',
-      'components': '../../../src/scripts/components/'
-    }
+    extensions: ['', '.js', '.jsx']
+  },
+  output: {
+    path: path.resolve(ROOT_PATH, 'build'),
+    filename: 'bundle.js'
   },
   module: {
-    preLoaders: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'eslint-loader'
-    }],
-    loaders: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'react-hot!babel-loader?stage=0&optional=runtime'
-    }, {
-      test: /\.scss/,
-      loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
-    }, {
-      test: /\.css$/,
-      loader: 'style-loader!css-loader'
-    }, {
-      test: /\.(png|jpg|gif)$/,
-      loader: 'url-loader?limit=8192'
-    },
-      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&minetype=application/font-woff" },
-      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&minetype=application/font-woff2" },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&minetype=application/octet-stream" },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: "file" },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&minetype=image/svg+xml" }
+    loaders: [
+      {
+        // test for both js and jsx
+        test: /\.jsx?$/,
+
+        // use babel loader with Stage 1 features
+        loader: 'babel?stage=1',
+
+        // operate only on our app directory
+        include: path.resolve(ROOT_PATH, 'app')
+      },
+      {
+        test: /\.css$/,
+        loaders: ['style', 'css']
+      }
     ]
   },
-
-
-
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new webpack.IgnorePlugin(/vertx/),
-    new webpack.DefinePlugin({
-      __DEV__: 'true'
-    }),
-    new webpack.DefinePlugin({
-      __APIURL__: '"http://localhost:3001/v1/"'
+    new HtmlWebpackPlugin({
+      title: 'Kanban app'
     })
   ]
-
 };
+
+if(TARGET === 'build') {
+  module.exports = merge(common, {
+    module: {
+      loaders: [
+        {
+          test: /\.jsx?$/,
+          loader: 'babel?stage=1',
+          include: path.resolve(ROOT_PATH, 'app')
+        }
+      ]
+    },
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          // This has effect on the react lib size
+          'NODE_ENV': JSON.stringify('production')
+        }
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: false
+        }
+      })
+    ]
+  });
+}
+
+if(TARGET === 'dev') {
+  module.exports = merge(common, {
+    entry: [
+      'webpack-dev-server/client?http://localhost:8080',
+      'webpack/hot/dev-server'
+    ],
+    module: {
+      loaders: [
+        {
+          test: /\.jsx?$/,
+          loaders: ['react-hot', 'babel?stage=1', 'flowcheck'],
+          include: path.resolve(ROOT_PATH, 'app')
+        }
+      ]
+    }
+  });
+}
