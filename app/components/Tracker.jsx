@@ -3,8 +3,8 @@
 import React from 'react';
 import { Button, Glyphicon } from 'react-bootstrap';
 
-import Timer from 'Timer';
-import Leg from 'Leg';
+import Timer from './Timer';
+import Leg from './Leg';
 
 export default class Tracker extends React.Component {
   constructor(props) {
