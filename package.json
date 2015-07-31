@@ -13,7 +13,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "TARGET=build webpack",
     "start": "TARGET=dev webpack-dev-server --devtool eval --progress --colors --hot --inline --history-api-fallback --host 0.0.0.0",
-    "winstart": "webpack-dev-server --devtool eval --progress --colors --hot --inline --history-api-fallback"
+    "winstart": "webpack-dev-server --devtool eval --progress --colors --hot --inline --history-api-fallback",
+    "postinstall": "cp -a ./node_modules/bootswatch/bower_components/bootstrap/fonts ./node_modules/bootswatch"
   },
   "dependencies": {
     "axios": "^0.5.4",
