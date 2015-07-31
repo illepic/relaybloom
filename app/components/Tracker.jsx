@@ -23,7 +23,7 @@ export default class Tracker extends React.Component {
         </h1>
         <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handleHandoff}>Handoff</Button>
 
-        <div className="panel panel-primary">
+        <div className="panel panel-primary another-class">
           <div className="panel-heading"><span className="label label-info">L1-L6</span> <span>Van 1</span></div>
           <div className="panel-body">
             <h1>Jen <small>00:35:32</small></h1>
