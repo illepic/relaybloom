@@ -1,0 +1,7 @@
+web:
+  build: .
+  volumes:
+    - .:/code
+  environment:
+    DNSDOCK_NAME: web
+    DNSDOCK_IMAGE: relaybloom
