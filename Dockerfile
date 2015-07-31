@@ -13,9 +13,8 @@ RUN npm install -g nodemon
 WORKDIR /code
 ADD . /code
 
-ENV NODE_APP_FILE server.js
-ENV NODEMON_OPTS --watch .
+RUN npm install
+EXPOSE 8080
 
-EXPOSE 4004
+CMD npm start
 
-CMD nodemon $NODEMON_OPTS $NODE_APP_FILE 4004
