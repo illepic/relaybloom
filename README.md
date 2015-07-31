@@ -7,3 +7,5 @@ A relay race tracker written in react and other stuff.
 OSX/nix: `npm install && npm start`
 
 Windows: `set TARGET=dev` then `npm run winstart`
+
+Navigate to : http://localhost:8080/webpack-dev-server/bundle for a status bar or just http://localhost:8080

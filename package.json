@@ -13,11 +13,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "TARGET=build webpack",
     "start": "TARGET=dev webpack-dev-server --devtool eval --progress --colors --hot --inline --history-api-fallback --host 0.0.0.0",
-    "winstart": "webpack-dev-server --devtool eval --progress --colors --hot --inline --history-api-fallback --host 0.0.0.0"
+    "winstart": "webpack-dev-server --devtool eval --progress --colors --hot --inline --history-api-fallback"
   },
   "dependencies": {
     "axios": "^0.5.4",
-    "bootswatch": "^3.3.4",
+    "bootswatch": "^3.3.5",
     "lodash": "^3.8.0",
     "moment": "^2.10.3",
     "moment-duration-format": "^1.3.0",
