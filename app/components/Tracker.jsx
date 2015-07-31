@@ -16,7 +16,11 @@ export default class Tracker extends React.Component {
     return (
       <div className="RELAYbloomTracker">
 
-        <h1 className="text-center"><small><Glyphicon glyph='time'/> <strong><Timer /></strong><span> / </span><Timer ms={this.props.appdata.plan.expectedDuration}/></small></h1>
+        <h1 className="text-center">
+          <small>
+            <Glyphicon glyph='time'/> <strong><Timer /></strong> <span> / </span> <Timer ms={this.props.appdata.plan.expectedDuration}/>
+          </small>
+        </h1>
         <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handleHandoff}>Handoff</Button>
 
         <div className="panel panel-primary">
