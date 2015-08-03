@@ -6,7 +6,7 @@ A relay race tracker written in react and other stuff.
 
 1. Install packages
 
-    `npm install`
+        npm install
 
 1. Start webpack development server
     
