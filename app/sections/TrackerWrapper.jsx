@@ -9,7 +9,7 @@ import RaceData from '../libs/racedata';
 export default class TrackerWrapper extends React.Component {
   render() {
     return(
-      <Tracker appdata={RaceData}/>
+      <Tracker raceData={RaceData}/>
     );
   }
 }

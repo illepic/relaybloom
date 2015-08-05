@@ -1,5 +1,5 @@
 export default {
-  name: "Hood to Coast 2015",
+  raceName: "Hood to Coast 2015",
   details: "Details here",
   legs: [
     {},
@@ -8,6 +8,7 @@ export default {
   ],
   plan: {
     expectedDuration: 174737000,
+    currentTime: 0,
     legs: [
       {
         name: "Leg 1",

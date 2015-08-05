@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import { Button, Glyphicon } from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 
 import Timer from './Timer';
 import Leg from './Leg';
@@ -15,12 +15,10 @@ export default class Tracker extends React.Component {
     console.log(this.state);
     return (
       <div className="RELAYbloomTracker">
+        <h1 className="text-center">{this.props.raceData.raceName}</h1>
 
-        <h1 className="text-center">
-          <small>
-            <Glyphicon glyph='time'/> <strong><Timer /></strong> <span> / </span> <Timer ms={this.props.appdata.plan.expectedDuration}/>
-          </small>
-        </h1>
+        <Timer tickTime={this.props.raceData.plan.currentTime} totalTime={this.props.raceData.plan.expectedDuration}/>
+
         <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handleHandoff}>Handoff</Button>
 
         <div className="panel panel-primary another-class">
@@ -32,7 +30,7 @@ export default class Tracker extends React.Component {
           </div>
 
           <ul className="list-group">
-            {this.props.appdata.plan.legs.map(function(leg, index) {
+            {this.props.raceData.plan.legs.map(function(leg, index) {
               return (<Leg key={leg.abbreviation} index={index+1} data={leg}/>);
             })}
           </ul>
@@ -42,6 +40,7 @@ export default class Tracker extends React.Component {
       </div>
     );
   }
+
   handleHandoff() {
     console.log('handoff handled from tracker');
     this.props.handoff('hello string');
