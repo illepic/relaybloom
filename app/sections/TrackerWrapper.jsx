@@ -7,6 +7,9 @@ import RaceData from '../libs/racedata';
 
 // A way for us to pass props to just this
 export default class TrackerWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return(
       <Tracker raceData={RaceData}/>

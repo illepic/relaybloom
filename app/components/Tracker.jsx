@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {Button} from 'react-bootstrap';
+import Moment from 'moment';
 
 import Timer from './Timer';
 import Leg from './Leg/Leg';
@@ -9,7 +10,15 @@ import Leg from './Leg/Leg';
 export default class Tracker extends React.Component {
   constructor(props) {
     super(props);
-    this.handleHandoff = this.handleHandoff.bind(this);
+    this.handoff = this.handoff.bind(this);
+    this.tick = this.tick.bind(this);
+
+    this.raceStart = 0;
+
+    this.state = {
+      elapsed: 0,
+      currentLeg: 0
+    };
   }
   render() {
     console.log(this.state);
@@ -20,10 +29,10 @@ export default class Tracker extends React.Component {
         </h2>
 
         <h1 className="text-center">
-          <Timer tickTime={this.props.raceData.plan.currentTime} totalTime={this.props.raceData.plan.expectedDuration}/>
+          <Timer tickTime={this.state.elapsed} totalTime={this.props.raceData.expectedDuration}/>
         </h1>
 
-        <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handleHandoff}>Handoff</Button>
+        <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handoff}>Handoff</Button>
 
         <div className="panel panel-primary another-class">
           <div className="panel-heading"><span className="label label-info">L1-L6</span> <span>Van 1</span></div>
@@ -34,7 +43,7 @@ export default class Tracker extends React.Component {
           </div>
 
           <ul className="list-group">
-            {this.props.raceData.plan.legs.map(function(leg, index) {
+            {this.props.raceData.legs.map(function(leg, index) {
               return (
                 <li className="list-group-item" key={index}>
                   <Leg legData={leg}/>
@@ -49,9 +58,33 @@ export default class Tracker extends React.Component {
     );
   }
 
-  handleHandoff() {
-    console.log('handoff handled from tracker');
-    this.props.handoff('hello string');
+
+  handoff() {
+
+    // Handing off always increases leg
+    this.setState({
+      currentLeg: ++this.state.currentLeg
+    });
+
+    // Very first press, leg will be 0
+    if (this.state.currentLeg === 1) {
+      this.raceStart = Moment();
+      this.interval = setInterval(this.tick, 1000);
+      return null;
+    }
+
+    // Timer running, for now stop it
+    if (this.state.currentLeg > this.props.raceData.legs.length) {
+      clearInterval(this.interval);
+      return null;
+    }
   }
+
+  tick() {
+    this.setState({
+      elapsed: Moment().diff(this.raceStart)
+    });
+  }
+
 }
 

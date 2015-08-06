@@ -4,7 +4,7 @@ import React from 'react';
 import { Navbar, Nav, NavItem, Glyphicon } from 'react-bootstrap';
 import { NavItemLink } from 'react-router-bootstrap';
 
-let relayBloomIcon = (
+const relayBloomIcon = (
   <a href="#"><Glyphicon glyph='road'/> <span>RELAYbloom</span></a>
 );
 

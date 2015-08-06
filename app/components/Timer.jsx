@@ -13,7 +13,7 @@ class Timer extends React.Component {
 
   render() {
 
-    const elapsedTime = Moment.duration(this.props.tickTime).format();
+    let elapsedTime = Moment.duration(this.props.tickTime).format();
     const totalTime = Moment.duration(this.props.totalTime).format();
 
     return (
