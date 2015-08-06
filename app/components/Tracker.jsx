@@ -4,7 +4,7 @@ import React from 'react';
 import {Button} from 'react-bootstrap';
 
 import Timer from './Timer';
-import Leg from './Leg';
+import Leg from './Leg/Leg';
 
 export default class Tracker extends React.Component {
   constructor(props) {
@@ -15,9 +15,13 @@ export default class Tracker extends React.Component {
     console.log(this.state);
     return (
       <div className="RELAYbloomTracker">
-        <h1 className="text-center">{this.props.raceData.raceName}</h1>
+        <h2 className="text-center">
+          <small>{this.props.raceData.raceName}</small>
+        </h2>
 
-        <Timer tickTime={this.props.raceData.plan.currentTime} totalTime={this.props.raceData.plan.expectedDuration}/>
+        <h1 className="text-center">
+          <Timer tickTime={this.props.raceData.plan.currentTime} totalTime={this.props.raceData.plan.expectedDuration}/>
+        </h1>
 
         <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handleHandoff}>Handoff</Button>
 
@@ -31,7 +35,11 @@ export default class Tracker extends React.Component {
 
           <ul className="list-group">
             {this.props.raceData.plan.legs.map(function(leg, index) {
-              return (<Leg key={leg.abbreviation} index={index+1} data={leg}/>);
+              return (
+                <li className="list-group-item" key={index}>
+                  <Leg legData={leg}/>
+                </li>
+              );
             })}
           </ul>
 

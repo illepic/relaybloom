@@ -12,20 +12,14 @@ class Timer extends React.Component {
   }
 
   render() {
-    //console.log(this.props.ms);
-    //console.log(Moment.duration(this.props.ms).format());
 
-    const elapsedTime = this.props.tickTime;
-    const totalTime = this.props.totalTime;
-
-    var formattedDuration = Moment.duration(this.props.ms).format();
+    const elapsedTime = Moment.duration(this.props.tickTime).format();
+    const totalTime = Moment.duration(this.props.totalTime).format();
 
     return (
-      <h1 className="text-center">
-        <small>
-          <Glyphicon glyph='time'/> <strong><span>{elapsedTime}</span></strong> <span> / </span> <span>{totalTime}</span>
-        </small>
-      </h1>
+      <span className="timer">
+        <Glyphicon glyph='time'/> <strong><span>{elapsedTime}</span></strong> <span> / </span> <span>{totalTime}</span>
+      </span>
     );
   }
 }

@@ -31,6 +31,10 @@ var common = {
         test: /\.css$/,
         loaders: ['style', 'css']
       },
+      {
+        test: /\.scss$/,
+        loader: 'style!css!sass'
+      },
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&minetype=application/font-woff" },
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,   loader: "url?limit=10000&minetype=application/font-woff2" },
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&minetype=application/octet-stream" },

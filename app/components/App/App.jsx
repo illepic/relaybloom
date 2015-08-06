@@ -4,11 +4,11 @@ import React from 'react';
 import Router from 'react-router';
 import Moment from 'moment';
 
-import RelayBloomNav from './NavBar';
+import RelayBloomNav from './../NavBar';
 const RouteHandler = Router.RouteHandler;
 
 require('bootswatch/flatly/bootstrap.min.css');
-require('../stylesheets/app.css');
+require('./app.scss');
 
 
 export default class App extends React.Component {

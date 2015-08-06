@@ -3,7 +3,7 @@
 import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
 
-import App from './components/App';
+import App from './components/App/App';
 import TrackerWrapper from './sections/TrackerWrapper';
 import Team from './sections/Team';
 import Profile from './sections/Profile';
