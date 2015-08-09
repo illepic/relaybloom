@@ -45,11 +45,11 @@ export default class Tracker extends React.Component {
           <ul className="list-group">
             {this.props.raceData.legs.map(function(leg, index) {
               return (
-                <li className="list-group-item" key={index}>
-                  <Leg legData={leg}/>
+                <li className="list-group-item" key={index+1}>
+                  <Leg legData={leg} currentLeg={this.state.currentLeg}/>
                 </li>
               );
-            })}
+            }, this)}
           </ul>
 
         </div>
