@@ -4,87 +4,66 @@ export default {
   expectedDuration: 174737000,
   legs: [
     {
-      name: "Leg 1",
-      abbreviation: "L1",
       legId: 1,
-      timeExpected: 2730000,
-      timeStarted: 123123123123,
-      timeCompleted: 0,
+      targetSplit: 2612000,
+      legDistance: 5.44,
       racer: {
-        id: 1,
-        name: "Chris"
+        userId: 1,
+        name: "Nam Ho"
       }
     },
     {
-      name: "Leg 2",
-      abbreviation: "L2",
       legId: 2,
-      timeExpected: 2730000,
-      timeStarted: 0,
-      timeCompleted: 0,
+      targetSplit: 3394000,
+      legDistance: 6.07,
       racer: {
-        id: 2,
-        name: "Dalene"
+        userId: 2,
+        name: "Eden Gwyn"
       }
     },
     {
-      name: "Leg 3",
-      abbreviation: "L3",
       legId: 3,
-      timeExpected: 2730000,
-      timeStarted: 0,
-      timeCompleted: 0,
+      targetSplit: 2395000,
+      legDistance: 3.75,
       racer: {
-        id: 3,
-        name: "Tyler"
+        userId: 3,
+        name: "Julie Mills"
       }
     },
     {
-      name: "Leg 4",
-      abbreviation: "L4",
       legId: 4,
-      timeExpected: 3423423,
-      timeStarted: 0,
-      timeCompleted: 0,
+      targetSplit: 4308000,
+      legDistance: 7.18,
       racer: {
-        id: 4,
-        name: "adfadsf"
+        userId: 4,
+        name: "Dalene Bloom"
       }
     },
     {
-      name: "Leg 5",
-      abbreviation: "L5",
       legId: 5,
-      timeExpected: 2730000,
-      timeStarted: 0,
-      timeCompleted: 0,
+      targetSplit: 1906000,
+      legDistance: 6.05,
       racer: {
-        id: 8,
-        name: "adfadf"
+        userId: 5,
+        name: "Frank Febbraro"
       }
     },
     {
-      name: "Leg 6",
-      abbreviation: "L6",
       legId: 6,
-      timeExpected: 2730000,
-      timeStarted: 0,
-      timeCompleted: 0,
+      targetSplit: 3446000,
+      legDistance: 6.85,
       racer: {
-        id: 8,
-        name: "234sef"
+        userId: 6,
+        name: "Karen Borchert"
       }
     },
     {
-      name: "Leg 7",
-      abbreviation: "L7",
       legId: 7,
-      timeExpected: 2730000,
-      timeStarted: 0,
-      timeCompleted: 0,
+      targetSplit: 2817000,
+      legDistance: 5.6,
       racer: {
-        id: 11,
-        name: "adfad"
+        userId: 6,
+        name: "Mark Gabriel"
       }
     }
   ]

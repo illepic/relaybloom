@@ -3,6 +3,7 @@
 import React from 'react';
 import {Button} from 'react-bootstrap';
 import Moment from 'moment';
+import _ from 'lodash';
 
 import Timer from './Timer';
 import Leg from './Leg/Leg';
@@ -13,11 +14,16 @@ export default class Tracker extends React.Component {
     this.handoff = this.handoff.bind(this);
     this.tick = this.tick.bind(this);
 
-    this.raceStart = 0;
+    // New starting array of leg states
+    let startingLegs = _.map(this.props.raceData.legs, function(leg) {
+      return {dateStarted: 0, dateCompleted: 0, active: false};
+    });
 
     this.state = {
+      raceState: 0,
       elapsed: 0,
-      currentLeg: 0
+      currentLeg: 0,
+      legState: startingLegs
     };
   }
   render() {
@@ -46,7 +52,7 @@ export default class Tracker extends React.Component {
             {this.props.raceData.legs.map(function(leg, index) {
               return (
                 <li className="list-group-item" key={index+1}>
-                  <Leg legData={leg} currentLeg={this.state.currentLeg}/>
+                  <Leg legData={leg} legActive={this.state.legState[index]}/>
                 </li>
               );
             }, this)}
@@ -61,19 +67,26 @@ export default class Tracker extends React.Component {
 
   handoff() {
 
+
+    // UNBREAK THIS
+    let currentLeg = this.state.legState[this.state.currentLeg];
+    currentLeg.dateStarted = Moment();
+    console.log(currentLeg);
+
     // Handing off always increases leg
     this.setState({
-      currentLeg: ++this.state.currentLeg
+      currentLeg: ++this.state.currentLeg,
+      legState: this.state.legState
     });
 
     // Very first press, leg will be 0
     if (this.state.currentLeg === 1) {
-      this.raceStart = Moment();
+      this.state.raceStart = Moment();
       this.interval = setInterval(this.tick, 1000);
       return null;
     }
 
-    // Timer running, for now stop it
+    // Reached end and timer running, for now stop it
     if (this.state.currentLeg > this.props.raceData.legs.length) {
       clearInterval(this.interval);
       return null;
@@ -81,8 +94,10 @@ export default class Tracker extends React.Component {
   }
 
   tick() {
+    let totalElapsed = Moment().diff(this.state.raceStart);
+    let currentLeg =
     this.setState({
-      elapsed: Moment().diff(this.raceStart)
+      elapsed: totalElapsed
     });
   }
 
