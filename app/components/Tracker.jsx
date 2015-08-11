@@ -51,7 +51,7 @@ export default class Tracker extends React.Component {
           <ul className="list-group">
             {this.props.raceData.legs.map(function(leg, index) {
               return (
-                <li className="list-group-item" key={index+1}>
+                <li className="list-group-item" key={index}>
                   <Leg legData={leg} legActive={this.state.legState[index]}/>
                 </li>
               );
@@ -67,37 +67,37 @@ export default class Tracker extends React.Component {
 
   handoff() {
 
+    const now = Moment().valueOf();
+    const current = this.state.currentLeg;
 
-    // UNBREAK THIS
-    let currentLeg = this.state.legState[this.state.currentLeg];
-    currentLeg.dateStarted = Moment();
-    console.log(currentLeg);
-
-    // Handing off always increases leg
-    this.setState({
-      currentLeg: ++this.state.currentLeg,
-      legState: this.state.legState
-    });
-
-    // Very first press, leg will be 0
-    if (this.state.currentLeg === 1) {
-      this.state.raceStart = Moment();
+    // Before incrementing leg
+    if (current === 0) {
+      this.state.raceStart = now;
       this.interval = setInterval(this.tick, 1000);
-      return null;
     }
-
+    else {
+      this.state.legState[current - 1].dateCompleted = now;
+    }
     // Reached end and timer running, for now stop it
-    if (this.state.currentLeg > this.props.raceData.legs.length) {
+    if (current === this.props.raceData.legs.length) {
       clearInterval(this.interval);
       return null;
     }
+
+    this.state.legState[current].dateStarted = now;
+
+    // Handing off always increases leg
+    this.setState({
+      currentLeg: current + 1,
+      legState: this.state.legState
+    });
+
+
   }
 
   tick() {
-    let totalElapsed = Moment().diff(this.state.raceStart);
-    let currentLeg =
     this.setState({
-      elapsed: totalElapsed
+      elapsed: Moment().diff(this.state.raceStart)
     });
   }
 

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {ProgressBar, Glyphicon} from 'react-bootstrap';
+import Moment from 'moment';
 import Timer from './../Timer';
 
 require('./leg.scss');
@@ -14,7 +15,7 @@ export default class Leg extends React.Component {
   render() {
 
     //let activeClass = (this.props.currentLeg === this.props.legData.legId) ? 'active' : null;
-
+    let legElapsed = (this.props.legActive.dateStarted > 0) ? Moment().valueOf() - this.props.legActive.dateStarted : 0;
     return (
       <div className="leg">
         <div className="leg__info">
@@ -22,7 +23,7 @@ export default class Leg extends React.Component {
           <span className="leg__racer-name">{this.props.legData.racer.name} | start: {this.props.legActive.dateStarted}, end: {this.props.legActive.dateCompleted}</span>
           <span className="badge leg__timer">
             <span className="leg__distance"><Glyphicon glyph='move'/>{this.props.legData.legDistance}mi </span>
-            <Timer tickTime={this.props.legData.timeCompleted} totalTime={this.props.legData.targetSplit}/>
+            <Timer tickTime={legElapsed} totalTime={this.props.legData.targetSplit}/>
           </span>
         </div>
         <ProgressBar className="leg__progress" now={60}/>
