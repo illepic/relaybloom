@@ -9,7 +9,8 @@ export default {
       legDistance: 5.44,
       racer: {
         userId: 1,
-        name: "Nam Ho"
+        name: "Nam Ho",
+        team: "Van 1"
       }
     },
     {
@@ -18,7 +19,8 @@ export default {
       legDistance: 6.07,
       racer: {
         userId: 2,
-        name: "Eden Gwyn"
+        name: "Eden Gwyn",
+        team: "Van 1"
       }
     },
     {
@@ -27,7 +29,8 @@ export default {
       legDistance: 3.75,
       racer: {
         userId: 3,
-        name: "Julie Mills"
+        name: "Julie Mills",
+        team: "Van 1"
       }
     },
     {
@@ -36,7 +39,8 @@ export default {
       legDistance: 7.18,
       racer: {
         userId: 4,
-        name: "Dalene Bloom"
+        name: "Dalene Bloom",
+        team: "Van 1"
       }
     },
     {
@@ -45,7 +49,8 @@ export default {
       legDistance: 6.05,
       racer: {
         userId: 5,
-        name: "Frank Febbraro"
+        name: "Frank Febbraro",
+        team: "Van 1"
       }
     },
     {
@@ -54,7 +59,8 @@ export default {
       legDistance: 6.85,
       racer: {
         userId: 6,
-        name: "Karen Borchert"
+        name: "Karen Borchert",
+        team: "Van 1"
       }
     },
     {
@@ -63,7 +69,8 @@ export default {
       legDistance: 5.6,
       racer: {
         userId: 6,
-        name: "Mark Gabriel"
+        name: "Mark Gabriel",
+        team: "Van 1"
       }
     }
   ]

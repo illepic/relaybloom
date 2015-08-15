@@ -27,14 +27,14 @@ export default class Tracker extends React.Component {
     };
   }
   render() {
-    console.log(this.state);
+    //console.log(this.state);
     return (
       <div className="RELAYbloomTracker">
 
         <h2 className="text-center">
           <small>{this.props.raceData.raceName}</small>
           <br/>
-          <small>Started: {Moment(this.state.raceStart).format('ddd, MMM HH:mm:ss')}</small>
+          <small>Started: {Moment(this.state.raceStart).format('ddd, MMM d HH:mm:ss')}</small>
         </h2>
 
         <h1 className="text-center">
@@ -66,7 +66,6 @@ export default class Tracker extends React.Component {
       </div>
     );
   }
-
 
   handoff() {
 

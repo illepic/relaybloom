@@ -14,28 +14,27 @@ export default class Leg extends React.Component {
   }
 
   render() {
-    //console.log(this.props.legActive.dateCompleted);
 
     let legElapsed = 0;
-    //let legActive = false;
-    //console.log(this.props);
 
     // Leg has end date, it's done
     if (this.props.legActive.dateCompleted) {
       legElapsed = this.props.legActive.dateCompleted - this.props.legActive.dateStarted;
-      //legActive = false;
     }
     // Or we have a start date, meaning we've started
     else if (this.props.legActive.dateStarted > 0) {
       legElapsed = Moment().valueOf() - this.props.legActive.dateStarted;
-      //legActive = true;
     }
 
-    //let activeClass = (!!legElapsed) ? 'bg-success' : '';
-    let legClasses = {
+    const legClasses = {
       'leg': true,
       'leg--active': this.props.legActive.isActive
     };
+
+    let legProgress = (legElapsed / (this.props.legData.targetSplit - legElapsed)) * 100;
+    const shortMomentFormat = 'ddd d, HH:mm:ss';
+    
+
 
     return (
       <div className={classNames(legClasses)}>
@@ -44,20 +43,34 @@ export default class Leg extends React.Component {
 
             <div className="pull-left">
               <span className="label label-default leg__abbrv-label">L{this.props.legData.legId}</span>
-              <span className="leg__racer-name">{this.props.legData.racer.name} | start: {this.props.legActive.dateStarted}, end: {this.props.legActive.dateCompleted}</span>
+              <strong className="leg__racer-name">{this.props.legData.racer.name}</strong>
             </div>
 
             <div className="pull-right">
               <span className="badge leg__timer">
-                <span className="leg__distance"><Glyphicon glyph='move'/>{this.props.legData.legDistance}mi </span>
-                <Timer tickTime={legElapsed} totalTime={this.props.legData.targetSplit}/>
+                <span className="leg__distance"><Glyphicon glyph='move'/>{this.props.legData.legDistance}mi</span>
+                <span className="leg__split">{Moment.duration(this.props.legData.targetSplit).format()}</span>
               </span>
             </div>
 
           </div>
+          <table className="table leg__dates">
+            <tbody>
+              <tr><th><small className="text-uppercase">Est. Start</small></th><td>{Moment(this.props.legActive.dateStarted).format(shortMomentFormat)}</td></tr>
+              <tr><th><small className="text-uppercase">Start</small></th><td>{(!!this.props.legActive.dateStarted) ? Moment(this.props.legActive.dateStarted).format(shortMomentFormat) : 'TBD'}</td></tr>
+              <tr><th><small  className="text-uppercase">End</small></th><td>{(!!this.props.legActive.dateCompleted) ? Moment(this.props.legActive.dateCompleted).format(shortMomentFormat) : 'TBD'}</td></tr>
+            </tbody>
+          </table>
         </div>
-        <ProgressBar className="leg__progress" now={60}/>
+
+        <ProgressBar className="leg__progress" bsStyle="success" now={legProgress}/>
+        <h3 className="leg__progress-text text-center">
+          <Timer tickTime={legElapsed} totalTime={this.props.legData.targetSplit}/>
+        </h3>
+
       </div>
     );
   }
+
+
 }
