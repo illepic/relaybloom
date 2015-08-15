@@ -16,13 +16,13 @@ export default class Tracker extends React.Component {
 
     // New starting array of leg states
     let startingLegs = _.map(this.props.raceData.legs, function(leg) {
-      return {dateStarted: 0, dateCompleted: 0, active: false};
+      return {dateStarted: 0, dateCompleted: 0, isActive: false};
     });
 
     this.state = {
-      raceState: 0,
+      raceStart: 0,
       elapsed: 0,
-      currentLeg: 0,
+      currentLegNum: 0,
       legState: startingLegs
     };
   }
@@ -30,8 +30,11 @@ export default class Tracker extends React.Component {
     console.log(this.state);
     return (
       <div className="RELAYbloomTracker">
+
         <h2 className="text-center">
           <small>{this.props.raceData.raceName}</small>
+          <br/>
+          <small>Started: {Moment(this.state.raceStart).format('ddd, MMM HH:mm:ss')}</small>
         </h2>
 
         <h1 className="text-center">
@@ -68,30 +71,34 @@ export default class Tracker extends React.Component {
   handoff() {
 
     const now = Moment().valueOf();
-    const current = this.state.currentLeg;
+    //console.log(now);
+    const current = this.state.currentLegNum;
 
-    // Before incrementing leg
+    // START race
     if (current === 0) {
       this.state.raceStart = now;
       this.interval = setInterval(this.tick, 1000);
     }
-    else {
-      this.state.legState[current - 1].dateCompleted = now;
-    }
-    // Reached end and timer running, for now stop it
+    // END race
     if (current === this.props.raceData.legs.length) {
       clearInterval(this.interval);
       return null;
     }
 
+    // Stop *previous* leg
+    if (current > 0) {
+      this.state.legState[current - 1].dateCompleted = now;
+      this.state.legState[current - 1].isActive = false;
+    }
+    // Start current leg
     this.state.legState[current].dateStarted = now;
+    this.state.legState[current].isActive = true;
 
     // Handing off always increases leg
     this.setState({
-      currentLeg: current + 1,
+      currentLegNum: current + 1, // 1 is added here because of zero index
       legState: this.state.legState
     });
-
 
   }
 

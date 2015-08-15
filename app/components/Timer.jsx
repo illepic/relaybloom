@@ -16,6 +16,9 @@ class Timer extends React.Component {
     let elapsedTime = Moment.duration(this.props.tickTime).format();
     const totalTime = Moment.duration(this.props.totalTime).format();
 
+    //console.log(elapsedTime);
+    //console.log(totalTime);
+
     return (
       <span className="timer">
         <Glyphicon glyph='time'/> <strong><span>{elapsedTime}</span></strong> <span> / </span> <span>{totalTime}</span>

@@ -44,7 +44,7 @@ var common = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Kanban app'
+      title: 'relayBloom App'
     })
   ]
 };
