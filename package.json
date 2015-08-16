@@ -14,12 +14,11 @@
     "build": "TARGET=build webpack",
     "winbuild": "set TARGET=build&& webpack",
     "start": "TARGET=dev webpack-dev-server --devtool eval --progress --colors --hot --inline --history-api-fallback --host 0.0.0.0",
-    "winstart": "set TARGET=dev&&webpack-dev-server --devtool eval --progress --colors --hot --inline --history-api-fallback",
+    "winstart": "set TARGET=dev&&webpack-dev-server --devtool eval --progress --colors --hot --inline --history-api-fallback --content-base build/",
     "postinstall": "cp -a ./node_modules/bootswatch/bower_components/bootstrap/fonts ./node_modules/bootswatch"
   },
   "dependencies": {
     "axios": "^0.5.4",
-    "bootswatch": "^3.3.5",
     "lodash": "^3.10.1",
     "moment": "^2.10.6",
     "moment-duration-format": "^1.3.0",

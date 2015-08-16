@@ -7,7 +7,6 @@ import RelayBloomNav from './../NavBar';
 
 const RouteHandler = Router.RouteHandler;
 
-require('bootswatch/flatly/bootstrap.min.css');
 require('./app.scss');
 
 

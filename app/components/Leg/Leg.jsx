@@ -33,8 +33,6 @@ export default class Leg extends React.Component {
 
     let legProgress = (legElapsed / (this.props.legData.targetSplit - legElapsed)) * 100;
     const shortMomentFormat = 'ddd d, HH:mm:ss';
-    
-
 
     return (
       <div className={classNames(legClasses)}>

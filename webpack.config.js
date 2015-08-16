@@ -13,6 +13,7 @@ var common = {
   },
   output: {
     path: path.resolve(ROOT_PATH, 'build'),
+    publicPath: "/assets/",
     filename: 'bundle.js'
   },
   module: {
