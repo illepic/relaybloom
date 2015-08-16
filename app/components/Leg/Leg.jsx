@@ -31,8 +31,8 @@ export default class Leg extends React.Component {
       'leg--active': this.props.legActive.isActive
     };
 
-    let legProgress = (legElapsed / (this.props.legData.targetSplit - legElapsed)) * 100;
-    const shortMomentFormat = 'ddd d, HH:mm:ss';
+    let legProgress = (legElapsed / this.props.legData.targetSplit) * 100;
+
 
     return (
       <div className={classNames(legClasses)}>
@@ -54,9 +54,11 @@ export default class Leg extends React.Component {
           </div>
           <table className="table leg__dates">
             <tbody>
-              <tr><th><small className="text-uppercase">Est. Start</small></th><td>{Moment(this.props.legActive.dateStarted).format(shortMomentFormat)}</td></tr>
-              <tr><th><small className="text-uppercase">Start</small></th><td>{(!!this.props.legActive.dateStarted) ? Moment(this.props.legActive.dateStarted).format(shortMomentFormat) : 'TBD'}</td></tr>
-              <tr><th><small  className="text-uppercase">End</small></th><td>{(!!this.props.legActive.dateCompleted) ? Moment(this.props.legActive.dateCompleted).format(shortMomentFormat) : 'TBD'}</td></tr>
+              <tr><th className="leg__dates-label"><span className="label label-warning text-uppercase">Est. Start Date</span></th><td>{this.shortDate(this.props.legActive.dateEstimatedStart)}</td></tr>
+              <tr><th className="leg__dates-label"><span className="label label-success text-uppercase">Real Start Date</span></th><td>{this.shortDate(this.props.legActive.dateStarted)}</td></tr>
+
+              <tr><th className="leg__dates-label"><span  className="label label-warning text-uppercase">Est. End Date</span></th><td>{this.shortDate(this.props.legActive.dateEstimatedEnd)}</td></tr>
+              <tr><th className="leg__dates-label"><span  className="label label-success text-uppercase">Real End Date</span></th><td>{this.shortDate(this.props.legActive.dateCompleted)}</td></tr>
             </tbody>
           </table>
         </div>
@@ -70,5 +72,15 @@ export default class Leg extends React.Component {
     );
   }
 
+  shortDate(date) {
+    const shortMomentFormat = 'ddd D, HH:mm:ss';
+
+    if (!!date) {
+      return Moment(date).format(shortMomentFormat);
+    }
+    else {
+      return '---';
+    }
+  }
 
 }

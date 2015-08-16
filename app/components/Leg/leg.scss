@@ -1,3 +1,10 @@
+.leg {
+  padding: 20px 15px;
+  border-bottom: 1px solid lightgrey;
+}
+.leg--active {
+  border-top: 5px solid #18bc9c;
+}
 .leg__info {
   margin-bottom: 10px;
 }
@@ -6,6 +13,9 @@
 }
 .leg__dates {
   margin-top: 10px;
+}
+.leg__dates-label {
+  text-align: right;
 }
 .leg__distance {
   display: inline-block;
