@@ -11,16 +11,22 @@ export default class Legs extends ParseComponent {
 
   observe(props, state) {
     return {
-      legs: (new Parse.Query("Leg")).include("racer").ascending('legId')
+      legs: (new Parse.Query("Leg")).include("racer").ascending('legId'),
+      race: (new Parse.Query("Race"))
     };
   }
 
   render() {
 
-    //console.log(this.data.legs);
+    //console.log(this.data.race);
 
     return (
       <div className="legs">
+        {this.data.race.map(function(race,index) {
+          return (
+            <h2 key="index">{race.raceName}</h2>
+          );
+        }, this)};
         {this.data.legs.map(function(leg, index) {
           return (
             <div className="legs__item" key={index}>
