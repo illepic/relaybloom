@@ -4,6 +4,8 @@ import React from 'react';
 import {Button} from 'react-bootstrap';
 import Moment from 'moment';
 import _ from 'lodash';
+import {Parse} from 'parse';
+var ParseReact = require('parse-react');
 
 import Timer from './Timer';
 import Leg from './Leg/Leg';
@@ -77,6 +79,33 @@ export default class Tracker extends React.Component {
   handoff() {
 
     const next = this.state.currentLegNum + 1;
+
+    ParseReact.Mutation.Create("Team", {
+      teamId: 3,
+      teamName: "Herp derp"
+    }).dispatch();
+
+    let Leg = new Parse.Object.extend("Leg");
+    let query = new Parse.Query(Leg);
+
+    ParseReact.Mutation.Set({className: "Leg", objectId: "TkhUEBQoE8"}, {
+      isActive:true,
+      dateStarted: Moment().valueOf()
+    }).dispatch();
+
+    //query.get("TkhUEBQoE8", {
+    //  success: function(leg) {
+    //    console.log('leg returned');
+    //    console.log(leg.get("legDistance"));
+    //    console.log(leg.get("targetSplit"));
+    //
+    //    console.log(leg);
+    //
+    //  },
+    //  error: function(object, error) {
+    //    console.log(error);
+    //  }
+    //});
 
     // START race
     if (next === 1) {

@@ -28,6 +28,7 @@ export default class Legs extends ParseComponent {
               <p>Runner: {leg.racer.name}</p>
               <p>targetsplit: {leg.targetSplit}</p>
               <p>isActive: {(leg.isActive) ? 'active' : 'not active'}</p>
+              <p>Date Started: {leg.dateStarted}</p>
             </div>
           );
         }, this)}
