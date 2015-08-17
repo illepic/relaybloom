@@ -15,6 +15,8 @@ export default class Leg extends React.Component {
 
   render() {
 
+    console.log('Leg rendered');
+
     let legElapsed = 0;
 
     // Leg has end date, it's done

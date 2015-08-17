@@ -18,10 +18,11 @@
     "postinstall": "cp -a ./node_modules/bootswatch/bower_components/bootstrap/fonts ./node_modules/bootswatch"
   },
   "dependencies": {
-    "axios": "^0.5.4",
     "lodash": "^3.10.1",
     "moment": "^2.10.6",
     "moment-duration-format": "^1.3.0",
+    "parse": "^1.5.0",
+    "parse-react": "^0.4.2",
     "react": "^0.13.3",
     "react-bootstrap": "^0.24.3",
     "react-router": "^0.13.3",

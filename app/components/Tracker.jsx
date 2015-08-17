@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 import Timer from './Timer';
 import Leg from './Leg/Leg';
+import Legs from './Legs/Legs';
 
 export default class Tracker extends React.Component {
   constructor(props) {
@@ -54,6 +55,8 @@ export default class Tracker extends React.Component {
           <div className="panel-body">
             <p>Pertinent info up here maybe.</p>
           </div>
+
+          <Legs/>
 
           <div className="legs">
             {this.props.raceData.legs.map(function(leg, index) {
