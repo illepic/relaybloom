@@ -4,7 +4,7 @@ import React from 'react';
 import {ProgressBar, Glyphicon} from 'react-bootstrap';
 import Moment from 'moment';
 import Timer from './../Timer';
-import classNames from 'classNames';
+import classNames from 'classnames';
 
 require('./leg.scss');
 
