@@ -1,6 +1,7 @@
 import React from 'react';
 import {Parse} from 'parse';
 import ParseComponent from 'parse-react/class';
+import _ from 'lodash';
 
 import Leg from '../Leg/Leg';
 
@@ -11,22 +12,14 @@ export default class Legs extends ParseComponent {
 
   observe(props, state) {
     return {
-      legs: (new Parse.Query("Leg")).include("racer").ascending('legId'),
-      race: (new Parse.Query("Race"))
+      legs: new Parse.Query("Leg").include("racer").ascending('legId')
     };
   }
 
   render() {
-
-    //console.log(this.data.race);
-
+    console.log(this.data.legs);
     return (
       <div className="legs">
-        {this.data.race.map(function(race,index) {
-          return (
-            <h2 key="index">{race.raceName}</h2>
-          );
-        }, this)};
         {this.data.legs.map(function(leg, index) {
           return (
             <div className="legs__item" key={index}>

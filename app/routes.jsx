@@ -12,7 +12,7 @@ import Races from './sections/Races';
 export default (
   <Route path="/" handler={App}>
     <DefaultRoute handler={TrackerWrapper}/>
-    <Route name="tracker" path="/tracker" handler={TrackerWrapper}/>
+    <Route name="tracker" path="/tracker/:trackerId" handler={TrackerWrapper}/>
     <Route name="team" path="/team" handler={Team}/>
     <Route name="profile" path="/profile" handler={Profile}/>
     <Route name="races" path="/races" handler={Races}/>

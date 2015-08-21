@@ -11,20 +11,18 @@ export default class TrackerWrapper extends React.Component {
   constructor(props) {
     super(props);
 
-    // testing parse
+    // Parse key
     Parse.initialize("J0KTo2bvYUhCK8dap1Cbcz0vWK11fXzJ2kHZinx0", "82COMXIuq31Ff0QLuUIjoUOSlt8twxQzTnOmhUQ8");
-    //var TestObject = Parse.Object.extend("TestObject");
-    //var testObject = new TestObject();
-    //testObject.save({foo: "bar"}).then(function(object) {
-    //  alert("yay! it worked");
-    //});
+
+    // Get race data here by using this.props.params.trackerId
+    this.trackerId = this.props.params.trackerId;
 
     // Check localstorage for these values before calling to Parse
 
   }
   render() {
     return(
-      <Tracker raceData={RaceData}/>
+      <Tracker raceData={RaceData} raceId={this.trackerId}/>
     );
   }
 }

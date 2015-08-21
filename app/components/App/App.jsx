@@ -18,8 +18,8 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
-        <RelayBloomNav />
-        <RouteHandler/>
+        <RelayBloomNav {...this.props}/>
+        <RouteHandler {...this.props}/>
       </div>
     );
   }

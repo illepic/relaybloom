@@ -6,12 +6,13 @@ import Moment from 'moment';
 import _ from 'lodash';
 import {Parse} from 'parse';
 var ParseReact = require('parse-react');
+import ParseComponent from 'parse-react/class';
 
 import Timer from './Timer';
 import Leg from './Leg/Leg';
 import Legs from './Legs/Legs';
 
-export default class Tracker extends React.Component {
+export default class Tracker extends ParseComponent {
   constructor(props) {
     super(props);
     this.handoff = this.handoff.bind(this);
@@ -28,6 +29,8 @@ export default class Tracker extends React.Component {
       };
     });
 
+
+
     this.state = {
       raceStart: 0,
       elapsed: 0,
@@ -35,25 +38,32 @@ export default class Tracker extends React.Component {
       legState: startingLegs
     };
   }
+
+  observe(props, state) {
+    return {
+      race: new Parse.Query("Race").observeOne(this.props.raceId)
+    }
+  }
+
   render() {
-    //console.log(this.state);
+    console.log('tracker rendered');
     return (
-      <div className="RELAYbloomTracker">
+      <div className="RELAYbloomTracker tracker">
 
         <h2 className="text-center">
-          <small>{this.props.raceData.raceName}</small>
+          <small>{_.get(this.data.race, 'raceName', '')}, {this.props.raceId}</small>
           <br/>
-          <small>Started: {Moment(this.state.raceStart).format('ddd, MMM D HH:mm:ss')}</small>
+          <small>Started: {Moment(_.get(this.data.race, 'raceStart', Moment().valueOf())).format('ddd, MMM D HH:mm:ss')}</small>
         </h2>
 
-        <h1 className="text-center">
-          <Timer tickTime={this.state.elapsed} totalTime={this.props.raceData.expectedDuration}/>
+        <h1 className="text-center tracker__elapsed">
+          <Timer tickTime={this.state.elapsed} totalTime={_.get(this.data.race, 'expectedDuration', 0)}/>
         </h1>
 
         <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handoff}>Handoff</Button>
 
-        <div className="panel panel-primary another-class">
-          <div className="panel-heading"><span className="label label-info">L1-L6</span> <span>Van 1</span></div>
+        <div className="panel panel-primary">
+          <div className="panel-heading"><span className="label label-info">L1-L6</span> <span>Van 1 (test)</span></div>
           <div className="panel-body">
             <p>Pertinent info up here maybe.</p>
           </div>
@@ -80,10 +90,10 @@ export default class Tracker extends React.Component {
 
     const next = this.state.currentLegNum + 1;
 
-    ParseReact.Mutation.Create("Team", {
-      teamId: 3,
-      teamName: "Herp derp"
-    }).dispatch();
+    //ParseReact.Mutation.Create("Team", {
+    //  teamId: 3,
+    //  teamName: "Herp derp"
+    //}).dispatch();
 
     let Leg = new Parse.Object.extend("Leg");
     let query = new Parse.Query(Leg);
@@ -91,6 +101,10 @@ export default class Tracker extends React.Component {
     ParseReact.Mutation.Set({className: "Leg", objectId: "TkhUEBQoE8"}, {
       isActive:true,
       dateStarted: Moment().valueOf()
+    }).dispatch();
+
+    ParseReact.Mutation.Set({className: "Race", objectId: "hutipkX3QL"}, {
+      raceStart: Moment().valueOf()
     }).dispatch();
 
     //query.get("TkhUEBQoE8", {

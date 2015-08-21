@@ -13,7 +13,7 @@ export default class RelayBloomNav extends React.Component {
     return (
       <Navbar brand={relayBloomIcon} inverse toggleNavKey={0}>
         <Nav eventKey={0}>
-          <NavItemLink to='tracker' eventKey={1}><Glyphicon glyph='dashboard'/> Race Tracker</NavItemLink>
+          <NavItemLink to='tracker' eventKey={1} params={{trackerId:"hutipkX3QL"}}><Glyphicon glyph='dashboard'/> Race Tracker</NavItemLink>
           <NavItemLink to='team' eventKey={2}><Glyphicon glyph='tent'/> Team</NavItemLink>
           <NavItemLink to='profile' eventKey={3}><Glyphicon glyph='user'/> Profile</NavItemLink>
           <NavItemLink to='races' eventKey={4}><Glyphicon glyph='tasks'/> Races</NavItemLink>
