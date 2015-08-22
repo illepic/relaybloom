@@ -20,17 +20,17 @@ export default class Leg extends React.Component {
     let legElapsed = 0;
 
     // Leg has end date, it's done
-    if (this.props.legActive.dateCompleted) {
-      legElapsed = this.props.legActive.dateCompleted - this.props.legActive.dateStarted;
+    if (this.props.legData.dateCompleted) {
+      legElapsed = this.props.legData.dateCompleted - this.props.legData.dateStarted;
     }
     // Or we have a start date, meaning we've started
-    else if (this.props.legActive.dateStarted > 0) {
-      legElapsed = Moment().valueOf() - this.props.legActive.dateStarted;
+    else if (this.props.legData.dateStarted > 0) {
+      legElapsed = Moment().valueOf() - this.props.legData.dateStarted;
     }
 
     const legClasses = {
       'leg': true,
-      'leg--active': this.props.legActive.isActive
+      'leg--active': this.props.legData.isActive
     };
 
     let legProgress = (legElapsed / this.props.legData.targetSplit) * 100;
@@ -56,11 +56,11 @@ export default class Leg extends React.Component {
           </div>
           <table className="table leg__dates">
             <tbody>
-              <tr><th className="leg__dates-label"><span className="label label-warning text-uppercase">Est. Start Date</span></th><td>{this.shortDate(this.props.legActive.dateEstimatedStart)}</td></tr>
-              <tr><th className="leg__dates-label"><span className="label label-success text-uppercase">Real Start Date</span></th><td>{this.shortDate(this.props.legActive.dateStarted)}</td></tr>
+              <tr><th className="leg__dates-label"><span className="label label-warning text-uppercase">Est. Start Date</span></th><td>{this.shortDate(this.props.legData.dateEstimatedStart)}</td></tr>
+              <tr><th className="leg__dates-label"><span className="label label-success text-uppercase">Real Start Date</span></th><td>{this.shortDate(this.props.legData.dateStarted)}</td></tr>
 
-              <tr><th className="leg__dates-label"><span  className="label label-warning text-uppercase">Est. End Date</span></th><td>{this.shortDate(this.props.legActive.dateEstimatedEnd)}</td></tr>
-              <tr><th className="leg__dates-label"><span  className="label label-success text-uppercase">Real End Date</span></th><td>{this.shortDate(this.props.legActive.dateCompleted)}</td></tr>
+              <tr><th className="leg__dates-label"><span  className="label label-warning text-uppercase">Est. End Date</span></th><td>{this.shortDate(this.props.legData.dateEstimatedEnd)}</td></tr>
+              <tr><th className="leg__dates-label"><span  className="label label-success text-uppercase">Real End Date</span></th><td>{this.shortDate(this.props.legData.dateCompleted)}</td></tr>
             </tbody>
           </table>
         </div>

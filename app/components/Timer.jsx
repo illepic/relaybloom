@@ -6,7 +6,7 @@ import {Glyphicon} from 'react-bootstrap';
 
 require('moment-duration-format');
 
-class Timer extends React.Component {
+export default class Timer extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -23,6 +23,3 @@ class Timer extends React.Component {
     );
   }
 }
-Timer.defaultProps = {ms: 0};
-
-export default Timer;

@@ -16,26 +16,22 @@ export default class Tracker extends ParseComponent {
   constructor(props) {
     super(props);
     this.handoff = this.handoff.bind(this);
-    this.tick = this.tick.bind(this);
+    //this.tick = this.tick.bind(this);
 
     // New starting array of leg states
-    let startingLegs = _.map(this.props.raceData.legs, function(leg) {
-      return {
-        dateStarted: 0,
-        dateCompleted: 0,
-        isActive: false,
-        dateEstimatedStart: 0,
-        dateEstimatedEnd: 0
-      };
-    });
-
-
+    //let startingLegs = _.map(this.props.raceData.legs, function(leg) {
+    //  return {
+    //    dateStarted: 0,
+    //    dateCompleted: 0,
+    //    isActive: false,
+    //    dateEstimatedStart: 0,
+    //    dateEstimatedEnd: 0
+    //  };
+    //});
 
     this.state = {
-      raceStart: 0,
-      elapsed: 0,
-      currentLegNum: 0,
-      legState: startingLegs
+      //raceStart: 0,
+      currentLegNum: 0
     };
   }
 
@@ -68,23 +64,27 @@ export default class Tracker extends ParseComponent {
             <p>Pertinent info up here maybe.</p>
           </div>
 
+
           <Legs/>
 
-          <div className="legs">
-            {this.props.raceData.legs.map(function(leg, index) {
-              return (
-                <div className="legs__item" key={index}>
-                  <Leg legData={leg} legActive={this.state.legState[index]}/>
-                </div>
-              );
-            }, this)}
-          </div>
 
         </div>
 
       </div>
     );
   }
+
+//<div className="legs">
+//{this.props.raceData.legs.map(function(leg, index) {
+//  return (
+//    <div className="legs__item" key={index}>
+//      <Leg legData={leg} legActive={this.state.legState[index]}/>
+//    </div>
+//  );
+//}, this)}
+//</div>
+
+
 
   handoff() {
 
@@ -95,17 +95,17 @@ export default class Tracker extends ParseComponent {
     //  teamName: "Herp derp"
     //}).dispatch();
 
-    let Leg = new Parse.Object.extend("Leg");
-    let query = new Parse.Query(Leg);
-
-    ParseReact.Mutation.Set({className: "Leg", objectId: "TkhUEBQoE8"}, {
-      isActive:true,
-      dateStarted: Moment().valueOf()
-    }).dispatch();
-
-    ParseReact.Mutation.Set({className: "Race", objectId: "hutipkX3QL"}, {
-      raceStart: Moment().valueOf()
-    }).dispatch();
+    //let Leg = new Parse.Object.extend("Leg");
+    //let query = new Parse.Query(Leg);
+    //
+    //ParseReact.Mutation.Set({className: "Leg", objectId: "TkhUEBQoE8"}, {
+    //  isActive:true,
+    //  dateStarted: Moment().valueOf()
+    //}).dispatch();
+    //
+    //ParseReact.Mutation.Set({className: "Race", objectId: "hutipkX3QL"}, {
+    //  raceStart: Moment().valueOf()
+    //}).dispatch();
 
     //query.get("TkhUEBQoE8", {
     //  success: function(leg) {
@@ -122,25 +122,37 @@ export default class Tracker extends ParseComponent {
     //});
 
     // START race
-    if (next === 1) {
-      this.setState({ raceStart: Moment().valueOf() });
-      this.interval = setInterval(this.tick, 1000);
-    }
-    // END race
-    if (next > this.props.raceData.legs.length) {
-      clearInterval(this.interval);
+    //if (next === 1) {
+    //  this.setState({ raceStart: Moment().valueOf() });
+    //  this.interval = setInterval(this.tick, 1000);
+    //}
+
+    //if (!this.state.raceState) {
+    //  this.setstate({ raceStart: Moment().valueOf() });
+    //}
+
+    // If raceStart has not already been sent, send parse query to start race
+    if (!_.get(this.data.race, 'raceStart')) {
+      ParseReact.Mutation.Set({className: "Race", objectId: this.props.raceId}, {
+        raceStart: Moment().valueOf()
+      }).dispatch();
     }
 
-    // Stop *previous* leg
-    this.stopPreviousLeg(next);
-    // Start current leg
-    this.startNextLeg(next);
-
-    // Save it all
-    this.setState({
-      currentLegNum: next,
-      legState: this.state.legState
-    });
+    //// END race
+    //if (next > this.props.raceData.legs.length) {
+    //  clearInterval(this.interval);
+    //}
+    //
+    //// Stop *previous* leg
+    //this.stopPreviousLeg(next);
+    //// Start current leg
+    //this.startNextLeg(next);
+    //
+    //// Save it all
+    //this.setState({
+    //  currentLegNum: next,
+    //  legState: this.state.legState
+    //});
 
   }
 
@@ -193,11 +205,11 @@ export default class Tracker extends ParseComponent {
     }, this);
   }
 
-  tick() {
-    this.setState({
-      elapsed: Moment().diff(this.state.raceStart)
-    });
-  }
+  //tick() {
+  //  this.setState({
+  //    elapsed: Moment().diff(this.state.raceStart)
+  //  });
+  //}
 
 }
 
