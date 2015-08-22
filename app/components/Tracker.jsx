@@ -16,6 +16,7 @@ export default class Tracker extends ParseComponent {
   constructor(props) {
     super(props);
     this.handoff = this.handoff.bind(this);
+    this.stop = this.stop.bind(this);
     //this.tick = this.tick.bind(this);
 
     // New starting array of leg states
@@ -43,20 +44,23 @@ export default class Tracker extends ParseComponent {
 
   render() {
     console.log('tracker rendered');
+    console.log(this.data.race);
+    console.log("Tracker enddate", _.get(this.data.race, 'raceEnd', 0));
     return (
       <div className="RELAYbloomTracker tracker">
 
         <h2 className="text-center">
-          <small>{_.get(this.data.race, 'raceName', '')}, {this.props.raceId}</small>
+          <small>{_.get(this.data.race, 'raceName', '')}, {this.props.raceId}, test: {this.state.count}</small>
           <br/>
           <small>Started: {Moment(_.get(this.data.race, 'raceStart', Moment().valueOf())).format('ddd, MMM D HH:mm:ss')}</small>
         </h2>
 
         <h1 className="text-center tracker__elapsed">
-          <Timer tickTime={this.state.elapsed} totalTime={_.get(this.data.race, 'expectedDuration', 0)}/>
+          <Timer startDate={_.get(this.data.race, 'raceStart', Moment().valueOf())} endDate={_.get(this.data.race, 'raceEnd', Moment().valueOf())} totalTime={_.get(this.data.race, 'expectedDuration', 0)}/>
         </h1>
 
         <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handoff}>Handoff</Button>
+        <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.stop}>Stop</Button>
 
         <div className="panel panel-primary">
           <div className="panel-heading"><span className="label label-info">L1-L6</span> <span>Van 1 (test)</span></div>
@@ -64,12 +68,9 @@ export default class Tracker extends ParseComponent {
             <p>Pertinent info up here maybe.</p>
           </div>
 
-
           <Legs/>
 
-
         </div>
-
       </div>
     );
   }
@@ -84,6 +85,12 @@ export default class Tracker extends ParseComponent {
 //}, this)}
 //</div>
 
+  stop() {
+    // Just stop on second click
+    ParseReact.Mutation.Set({className: "Race", objectId: this.props.raceId}, {
+      raceEnd: Moment().valueOf()
+    }).dispatch();
+  }
 
 
   handoff() {
