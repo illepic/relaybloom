@@ -37,15 +37,16 @@ export default class Tracker extends ParseComponent {
   }
 
   observe(props, state) {
+    console.log(this.state);
     return {
       race: new Parse.Query("Race").observeOne(this.props.raceId)
     }
   }
 
   render() {
-    console.log('tracker rendered');
-    console.log(this.data.race);
-    console.log("Tracker enddate", _.get(this.data.race, 'raceEnd', 0));
+    //console.log('tracker rendered');
+    //console.log(this.data.race);
+    //console.log("Tracker enddate", _.get(this.data.race, 'raceEnd', 0));
     return (
       <div className="RELAYbloomTracker tracker">
 
@@ -68,7 +69,7 @@ export default class Tracker extends ParseComponent {
             <p>Pertinent info up here maybe.</p>
           </div>
 
-          <Legs/>
+          <Legs raceId={this.props.raceId}/>
 
         </div>
       </div>

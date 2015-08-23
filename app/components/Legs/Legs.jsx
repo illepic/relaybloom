@@ -12,11 +12,12 @@ export default class Legs extends ParseComponent {
 
   observe(props, state) {
     return {
-      legs: new Parse.Query("Leg").include("racer").ascending('legId')
+      legs: (new Parse.Query("Leg").equalTo("race", {__type: "Pointer", className: "Race", objectId: props.raceId})).include("racer").ascending('legId')
     };
   }
 
   render() {
+    console.log(this.props.raceId);
     console.log(this.data.legs);
     return (
       <div className="legs">
