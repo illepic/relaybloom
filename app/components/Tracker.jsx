@@ -16,6 +16,7 @@ export default class Tracker extends ParseComponent {
   constructor(props) {
     super(props);
     this.handoff = this.handoff.bind(this);
+    this.clear = this.clear.bind(this);
 
     var topScope = this;
     this.legs = [];
@@ -72,15 +73,35 @@ export default class Tracker extends ParseComponent {
           <Legs race={this.props.race}/>
 
         </div>
+
+        <Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.clear}>Clear</Button>
+
       </div>
     );
   }
 
-  stop() {
-    // Just stop on second click
-    ParseReact.Mutation.Set({className: "Race", objectId: this.props.raceId}, {
-      raceEnd: Moment().valueOf()
-    }).dispatch();
+  // Wipe all race data to test
+  clear() {
+
+    let clearBatch = new ParseReact.Mutation.Batch();
+
+    // Wipe Race
+    ParseReact.Mutation.Set(this.data.race, {
+      currentLeg: 0,
+      raceStart: 0,
+      raceEnd: 0
+    }).dispatch({batch:clearBatch});
+
+    // Wipe each leg
+    _.forEach(this.legs, function(leg) {
+      ParseReact.Mutation.Set({className: "Leg", objectId: _.get(leg, 'objectId')}, {
+        isActive: false,
+        dateCompleted: 0,
+        dateStarted: 0
+      }).dispatch({batch:clearBatch});
+    });
+
+    clearBatch.dispatch();
   }
 
 
