@@ -102,6 +102,7 @@ export default class Tracker extends ParseComponent {
     });
 
     clearBatch.dispatch();
+    document.location.reload();
   }
 
 

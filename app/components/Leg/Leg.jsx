@@ -3,7 +3,7 @@
 import React from 'react';
 import {ProgressBar, Glyphicon} from 'react-bootstrap';
 import Moment from 'moment';
-import Timer from './../Timer';
+import TimerStatic from './../TimerStatic';
 import classNames from 'classnames';
 
 require('./leg.scss');
@@ -11,21 +11,26 @@ require('./leg.scss');
 export default class Leg extends React.Component {
   constructor(props) {
     super(props);
+    this.tick = this.tick.bind(this);
+
+    this.state = {
+      legElapsed: this.props.legData.dateCompleted - this.props.legData.dateStarted
+    };
+
+    this.interval = 0;
   }
 
   render() {
 
     console.log('Leg rendered');
 
-    let legElapsed = 0;
-
     // Leg has end date, it's done
     if (this.props.legData.dateCompleted) {
-      legElapsed = this.props.legData.dateCompleted - this.props.legData.dateStarted;
+      clearInterval(this.interval);
     }
     // Or we have a start date, meaning we've started
-    else if (this.props.legData.dateStarted > 0) {
-      legElapsed = Moment().valueOf() - this.props.legData.dateStarted;
+    else if (this.props.legData.dateStarted && !this.interval) {
+      this.interval = setInterval(this.tick, 1000)
     }
 
     const legClasses = {
@@ -33,8 +38,7 @@ export default class Leg extends React.Component {
       'leg--active': this.props.legData.isActive
     };
 
-    let legProgress = (legElapsed / this.props.legData.targetSplit) * 100;
-
+    let legProgress = (this.state.legElapsed / this.props.legData.targetSplit) * 100;
 
     return (
       <div className={classNames(legClasses)}>
@@ -66,12 +70,20 @@ export default class Leg extends React.Component {
         </div>
 
         <ProgressBar className="leg__progress" bsStyle="success" now={legProgress}/>
+
         <h3 className="leg__progress-text text-center">
-          <Timer startDate={this.props.legData.dateStarted} endDate={this.props.legData.dateCompleted} totalTime={this.props.legData.targetSplit}/>
+          <TimerStatic elapsed={this.state.legElapsed} totalTime={this.props.legData.targetSplit}/>
         </h3>
 
       </div>
     );
+  }
+
+  tick() {
+    console.log('Leg tick happening');
+    this.setState({
+      legElapsed: Moment().valueOf() - this.props.legData.dateStarted
+    });
   }
 
   shortDate(date) {
