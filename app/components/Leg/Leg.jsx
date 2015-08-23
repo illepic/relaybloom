@@ -67,7 +67,7 @@ export default class Leg extends React.Component {
 
         <ProgressBar className="leg__progress" bsStyle="success" now={legProgress}/>
         <h3 className="leg__progress-text text-center">
-          <Timer tickTime={legElapsed} totalTime={this.props.legData.targetSplit}/>
+          <Timer startDate={this.props.legData.dateStarted} endDate={this.props.legData.dateCompleted} totalTime={this.props.legData.targetSplit}/>
         </h3>
 
       </div>
