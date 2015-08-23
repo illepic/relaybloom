@@ -17,28 +17,24 @@ export default class Tracker extends ParseComponent {
     super(props);
     this.handoff = this.handoff.bind(this);
     this.stop = this.stop.bind(this);
-    //this.tick = this.tick.bind(this);
 
-    // New starting array of leg states
-    //let startingLegs = _.map(this.props.raceData.legs, function(leg) {
-    //  return {
-    //    dateStarted: 0,
-    //    dateCompleted: 0,
-    //    isActive: false,
-    //    dateEstimatedStart: 0,
-    //    dateEstimatedEnd: 0
-    //  };
-    //});
+    var topScope = this;
+    this.legs = [];
 
-    console.log(this.props.raceObject);
+    console.log(this.props.race);
 
+    // Make a query of legs based on current Race. Store basic info about legs
     let Legs = Parse.Object.extend("Leg");
     var query = new Parse.Query(Legs);
     query.equalTo("race", this.props.race);
+
     query.find({
       success: function(legs) {
-        _.map(legs, function(leg) {
-          console.log(leg.get("legDistance"));
+        topScope.legs = _.map(legs, function(leg) {
+          return {
+            objectId: leg.id,
+            legId: leg.get('legId')
+          }
         });
       }
     });
@@ -49,17 +45,12 @@ export default class Tracker extends ParseComponent {
   }
 
   observe(props, state) {
-    console.log(this.state);
-
     return {
-      race: (new Parse.Query("Race")).observeOne(this.props.raceId)
+      race: (new Parse.Query("Race")).observeOne(this.props.race.id)
     }
   }
 
   render() {
-    //console.log('tracker rendered');
-    //console.log(this.data.race);
-    //console.log("Tracker enddate", _.get(this.data.race, 'raceEnd', 0));
     return (
       <div className="RELAYbloomTracker tracker">
 
@@ -82,22 +73,12 @@ export default class Tracker extends ParseComponent {
             <p>Pertinent info up here maybe.</p>
           </div>
 
-          <Legs race={this.props.raceObject}/>
+          <Legs race={this.props.race}/>
 
         </div>
       </div>
     );
   }
-
-//<div className="legs">
-//{this.props.raceData.legs.map(function(leg, index) {
-//  return (
-//    <div className="legs__item" key={index}>
-//      <Leg legData={leg} legActive={this.state.legState[index]}/>
-//    </div>
-//  );
-//}, this)}
-//</div>
 
   stop() {
     // Just stop on second click
@@ -109,8 +90,10 @@ export default class Tracker extends ParseComponent {
 
   handoff() {
 
-    const next = this.state.currentLegNum + 1;
-    console.log(next);
+    let previousLeg = this.data.race.currentLeg;
+    let nextLeg = this.data.race.currentLeg + 1;
+    const legCount = this.legs.length;
+
 
     //ParseReact.Mutation.Create("Team", {
     //  teamId: 3,
@@ -153,15 +136,34 @@ export default class Tracker extends ParseComponent {
     //  this.setstate({ raceStart: Moment().valueOf() });
     //}
 
+
     // If raceStart has not already been sent, send parse query to start race
     if (!_.get(this.data.race, 'raceStart')) {
-      ParseReact.Mutation.Set({className: "Race", objectId: this.props.raceId}, {
-        raceStart: Moment().valueOf()
+      ParseReact.Mutation.Set(this.data.race, {
+        raceStart: Moment().valueOf(),
+        currentLeg: nextLeg
       }).dispatch();
     }
 
+    // Set current leg
+    let currentObjectIdLookup = _.result(_.find(this.legs, 'legId', nextLeg), 'objectId');
+    console.log(currentObjectIdLookup);
+    ParseReact.Mutation.Set({className: "Leg", objectId: currentObjectIdLookup}, {
+      isActive: true,
+      dateStarted: Moment().valueOf()
+    }).dispatch();
+
+    // Set previous leg
+    if (previousLeg > 0) {
+      let previousObjectIdLookup = _.result(_.find(this.legs, 'legId', previousLeg), 'objectId');
+      ParseReact.Mutation.Set({className: "Leg", objectId: previousObjectIdLookup}, {
+        isActive: false,
+        dateCompleted: Moment().valueOf()
+      }).dispatch();
+
+    }
+
     // Advance leg
-    Parse.React.Mutation.Set({})
 
     //// END race
     //if (next > this.props.raceData.legs.length) {

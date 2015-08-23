@@ -18,8 +18,8 @@ export default class Legs extends ParseComponent {
   }
 
   render() {
-    console.log(this.props.raceId);
-    console.log(this.data.legs);
+    //console.log(this.props.raceId);
+    //console.log(this.data.legs);
     return (
       <div className="legs">
         {this.data.legs.map(function(leg, index) {
