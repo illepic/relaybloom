@@ -16,12 +16,9 @@ export default class Tracker extends ParseComponent {
   constructor(props) {
     super(props);
     this.handoff = this.handoff.bind(this);
-    this.stop = this.stop.bind(this);
 
     var topScope = this;
     this.legs = [];
-
-    console.log(this.props.race);
 
     // Make a query of legs based on current Race. Store basic info about legs
     let Legs = Parse.Object.extend("Leg");
@@ -65,7 +62,6 @@ export default class Tracker extends ParseComponent {
         </h1>
 
         <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handoff}>Handoff</Button>
-        <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.stop}>Stop</Button>
 
         <div className="panel panel-primary">
           <div className="panel-heading"><span className="label label-info">L1-L6</span> <span>Van 1 (test)</span></div>
@@ -112,74 +108,48 @@ export default class Tracker extends ParseComponent {
     //  raceStart: Moment().valueOf()
     //}).dispatch();
 
-    //query.get("TkhUEBQoE8", {
-    //  success: function(leg) {
-    //    console.log('leg returned');
-    //    console.log(leg.get("legDistance"));
-    //    console.log(leg.get("targetSplit"));
-    //
-    //    console.log(leg);
-    //
-    //  },
-    //  error: function(object, error) {
-    //    console.log(error);
-    //  }
-    //});
 
-    // START race
-    //if (next === 1) {
-    //  this.setState({ raceStart: Moment().valueOf() });
-    //  this.interval = setInterval(this.tick, 1000);
-    //}
-
-    //if (!this.state.raceState) {
-    //  this.setstate({ raceStart: Moment().valueOf() });
-    //}
-
-
-    // If raceStart has not already been sent, send parse query to start race
-    if (!_.get(this.data.race, 'raceStart')) {
-      ParseReact.Mutation.Set(this.data.race, {
-        raceStart: Moment().valueOf(),
-        currentLeg: nextLeg
-      }).dispatch();
-    }
-
-    // Set current leg
-    let currentObjectIdLookup = _.result(_.find(this.legs, 'legId', nextLeg), 'objectId');
-    console.log(currentObjectIdLookup);
-    ParseReact.Mutation.Set({className: "Leg", objectId: currentObjectIdLookup}, {
-      isActive: true,
-      dateStarted: Moment().valueOf()
-    }).dispatch();
+    let batch = new ParseReact.Mutation.Batch();
 
     // Set previous leg
-    if (previousLeg > 0) {
+    if (previousLeg > 0 && previousLeg <= legCount) {
       let previousObjectIdLookup = _.result(_.find(this.legs, 'legId', previousLeg), 'objectId');
       ParseReact.Mutation.Set({className: "Leg", objectId: previousObjectIdLookup}, {
         isActive: false,
         dateCompleted: Moment().valueOf()
-      }).dispatch();
-
+      }).dispatch({batch:batch});
     }
 
-    // Advance leg
+    // Set next leg
+    if (nextLeg <= legCount ) {
+      let currentObjectIdLookup = _.result(_.find(this.legs, 'legId', nextLeg), 'objectId');
+      console.log(currentObjectIdLookup);
+      ParseReact.Mutation.Set({className: "Leg", objectId: currentObjectIdLookup}, {
+        isActive: true,
+        dateStarted: Moment().valueOf()
+      }).dispatch({batch:batch});
+    }
 
-    //// END race
-    //if (next > this.props.raceData.legs.length) {
-    //  clearInterval(this.interval);
-    //}
-    //
-    //// Stop *previous* leg
-    //this.stopPreviousLeg(next);
-    //// Start current leg
-    //this.startNextLeg(next);
-    //
-    //// Save it all
-    //this.setState({
-    //  currentLegNum: next,
-    //  legState: this.state.legState
-    //});
+    // If raceStart has not already been sent, send parse query to start race
+    if (previousLeg === 0) {
+      ParseReact.Mutation.Set(this.data.race, {
+        raceStart: Moment().valueOf()
+      }).dispatch({batch:batch});
+    }
+
+    // Stop if we're on the last
+    if (previousLeg === legCount) {
+      ParseReact.Mutation.Set(this.data.race, {
+        raceEnd: Moment().valueOf()
+      }).dispatch({batch:batch});
+    }
+
+    // Set current leg always
+    ParseReact.Mutation.Set(this.data.race, {
+      currentLeg: nextLeg
+    }).dispatch({batch:batch});
+
+    batch.dispatch();
 
   }
 
