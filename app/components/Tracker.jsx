@@ -30,16 +30,29 @@ export default class Tracker extends ParseComponent {
     //  };
     //});
 
+    console.log(this.props.raceObject);
+
+    let Legs = Parse.Object.extend("Leg");
+    var query = new Parse.Query(Legs);
+    query.equalTo("race", this.props.race);
+    query.find({
+      success: function(legs) {
+        _.map(legs, function(leg) {
+          console.log(leg.get("legDistance"));
+        });
+      }
+    });
+
     this.state = {
-      //raceStart: 0,
       currentLegNum: 0
     };
   }
 
   observe(props, state) {
     console.log(this.state);
+
     return {
-      race: new Parse.Query("Race").observeOne(this.props.raceId)
+      race: (new Parse.Query("Race")).observeOne(this.props.raceId)
     }
   }
 
@@ -51,7 +64,7 @@ export default class Tracker extends ParseComponent {
       <div className="RELAYbloomTracker tracker">
 
         <h2 className="text-center">
-          <small>{_.get(this.data.race, 'raceName', '')}, {this.props.raceId}, test: {this.state.count}</small>
+          <small>{_.get(this.data.race, 'raceName', '')}, {this.props.raceId}, test: {_.get(this.data.race, 'currentLeg')}</small>
           <br/>
           <small>Started: {Moment(_.get(this.data.race, 'raceStart', Moment().valueOf())).format('ddd, MMM D HH:mm:ss')}</small>
         </h2>
@@ -69,7 +82,7 @@ export default class Tracker extends ParseComponent {
             <p>Pertinent info up here maybe.</p>
           </div>
 
-          <Legs raceId={this.props.raceId}/>
+          <Legs race={this.props.raceObject}/>
 
         </div>
       </div>
@@ -97,6 +110,7 @@ export default class Tracker extends ParseComponent {
   handoff() {
 
     const next = this.state.currentLegNum + 1;
+    console.log(next);
 
     //ParseReact.Mutation.Create("Team", {
     //  teamId: 3,
@@ -145,6 +159,9 @@ export default class Tracker extends ParseComponent {
         raceStart: Moment().valueOf()
       }).dispatch();
     }
+
+    // Advance leg
+    Parse.React.Mutation.Set({})
 
     //// END race
     //if (next > this.props.raceData.legs.length) {

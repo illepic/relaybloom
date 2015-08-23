@@ -11,8 +11,9 @@ export default class Legs extends ParseComponent {
   }
 
   observe(props, state) {
+    // this.props.race is a Parse Race object set to the race loaded via url
     return {
-      legs: (new Parse.Query("Leg").equalTo("race", {__type: "Pointer", className: "Race", objectId: props.raceId})).include("racer").ascending('legId')
+      legs: (new Parse.Query("Leg").equalTo("race", this.props.race)).include("racer").ascending('legId')
     };
   }
 
