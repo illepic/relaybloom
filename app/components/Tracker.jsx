@@ -5,8 +5,10 @@ import {Button} from 'react-bootstrap';
 import Moment from 'moment';
 import _ from 'lodash';
 import {Parse} from 'parse';
-var ParseReact = require('parse-react');
+import ParseReact from 'parse-react';
 import ParseComponent from 'parse-react/class';
+
+import io from 'socket.io-client';
 
 import Timer from './Timer';
 import Leg from './Leg/Leg';
@@ -17,6 +19,7 @@ export default class Tracker extends ParseComponent {
     super(props);
     this.handoff = this.handoff.bind(this);
     this.clear = this.clear.bind(this);
+    this.emit = this.emit.bind(this);
 
     var topScope = this;
     this.legs = [];
@@ -37,6 +40,10 @@ export default class Tracker extends ParseComponent {
       }
     });
 
+    this.socket = io();
+    this.socket.on('leg handoff', function(msg) {
+      alert(msg);
+    });
 
   }
 
@@ -72,8 +79,14 @@ export default class Tracker extends ParseComponent {
 
         <Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.clear}>Clear</Button>
 
+        <Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.emit}>Emit Stuff</Button>
       </div>
     );
+  }
+
+  emit() {
+    // Race objectid goes here
+    this.socket.emit('leg handoff', 'hello world');
   }
 
   // Wipe all race data to test

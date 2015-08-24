@@ -17,7 +17,7 @@ app.use(express.static('build'));
 
 io.on('connection', function(socket){
   socket.on('leg handoff', function(msg){
-    io.emit('leg handoff', msg);
+    socket.broadcast.emit('leg handoff', msg);
   });
 });
 
