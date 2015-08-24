@@ -19,6 +19,7 @@
     "express-start": "node relaybloomserver"
   },
   "dependencies": {
+    "bootswatch": "^3.3.5",
     "express": "^4.13.3",
     "lodash": "^3.10.1",
     "moment": "^2.10.6",
