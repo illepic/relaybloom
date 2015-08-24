@@ -14,7 +14,7 @@ export default class TrackerWrapper extends React.Component {
     // Parse key
     Parse.initialize("J0KTo2bvYUhCK8dap1Cbcz0vWK11fXzJ2kHZinx0", "82COMXIuq31Ff0QLuUIjoUOSlt8twxQzTnOmhUQ8");
 
-    // Check localstorage for these values before calling to Parse
+    // The race object is really useful here filtering within the Tracker
     let Race = Parse.Object.extend("Race");
     this.raceLookup = new Race();
     this.raceLookup.id = this.props.params.trackerId;

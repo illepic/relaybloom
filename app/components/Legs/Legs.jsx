@@ -1,7 +1,6 @@
 import React from 'react';
 import {Parse} from 'parse';
 import ParseComponent from 'parse-react/class';
-import Moment from 'moment';
 
 import Leg from '../Leg/Leg';
 

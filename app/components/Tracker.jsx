@@ -21,10 +21,6 @@ export default class Tracker extends ParseComponent {
     var topScope = this;
     this.legs = [];
 
-    //this.state = {
-    //  legs: []
-    //};
-
     // Make a query of legs based on current Race. Store basic info about legs
     let Legs = Parse.Object.extend("Leg");
     var query = new Parse.Query(Legs);
@@ -36,16 +32,8 @@ export default class Tracker extends ParseComponent {
           return {
             objectId: leg.id,
             legId: leg.get('legId')
-            //split: leg.get('targetSplit'),
-            //dateEstimatedStart: 0,
-            //dateEstimatedEnd: 0
           }
         });
-
-        // Set state to force recalc
-        //topScope.setState({
-        //  legs: topScope.legs
-        //});
       }
     });
 
@@ -109,8 +97,13 @@ export default class Tracker extends ParseComponent {
       }).dispatch({batch:clearBatch});
     });
 
-    clearBatch.dispatch();
-    document.location.reload();
+    clearBatch.dispatch().then(
+      function(object) {
+        console.log("Clear successful");
+        document.location.reload();
+      }
+    );
+
   }
 
 
@@ -134,7 +127,6 @@ export default class Tracker extends ParseComponent {
     // Set next leg
     if (nextLeg <= legCount ) {
       let currentObjectIdLookup = _.result(_.find(this.legs, 'legId', nextLeg), 'objectId');
-      console.log(currentObjectIdLookup);
       ParseReact.Mutation.Set({className: "Leg", objectId: currentObjectIdLookup}, {
         isActive: true,
         dateStarted: Moment().valueOf()
@@ -160,42 +152,8 @@ export default class Tracker extends ParseComponent {
       currentLeg: nextLeg
     }).dispatch({batch:batch});
 
-    //this.adjustEstimatedStartTimes(nextLeg);
-
     batch.dispatch();
 
   }
-
-  // Estimate start time of all upcoming legs
-  adjustEstimatedStartTimes(nextLeg) {
-    let now = Moment().valueOf();
-    let accumulatedTime = 0;
-    let lastSplit = 0;
-    console.log(nextLeg);
-
-
-    this.setState({
-      legs: _.map(this.legs, function(leg, index) {
-        console.log(leg.legId);
-
-        leg.dateEstimatedStart = 0;
-        leg.dateEstimatedEnd = 0;
-
-        // For legs beyond our current
-        if (leg.legId > nextLeg) {
-          leg.dateEstimatedStart = now + accumulatedTime + lastSplit;
-          leg.dateEstimatedEnd = now + accumulatedTime + leg.split;
-          accumulatedTime = accumulatedTime + leg.split;
-        }
-
-        lastSplit = leg.split;
-
-        return leg;
-
-      }, this)
-    });
-
-  }
-
 }
 

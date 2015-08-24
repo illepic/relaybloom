@@ -22,8 +22,6 @@ export default class Leg extends React.Component {
 
   render() {
 
-    //console.log('Leg rendered');
-
     // Leg has end date, it's done
     if (this.props.legData.dateCompleted) {
       clearInterval(this.interval);
