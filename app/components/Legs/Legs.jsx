@@ -1,7 +1,7 @@
 import React from 'react';
 import {Parse} from 'parse';
 import ParseComponent from 'parse-react/class';
-import _ from 'lodash';
+import Moment from 'moment';
 
 import Leg from '../Leg/Leg';
 
@@ -18,14 +18,37 @@ export default class Legs extends ParseComponent {
   }
 
   render() {
-    //console.log(this.props.raceId);
-    //console.log(this.data.legs);
+    let accumulatedTime = 0;
+    let activeLeg = 0;
+
     return (
       <div className="legs">
         {this.data.legs.map(function(leg, index) {
+
+          let estimates = {
+            estimatedStart: 0,
+            estimatedEnd: 0
+          };
+
+          // From active leg onward we should start accumulating
+          if (leg.isActive) {
+            activeLeg = leg.legId;
+
+            // Active should only estimate it's end, but start accumulating
+            accumulatedTime = leg.dateStarted + accumulatedTime + leg.targetSplit;
+            estimates.estimatedEnd = accumulatedTime;
+          }
+
+          // Leg is after active
+          if (activeLeg > 0 && leg.legId > activeLeg) {
+            estimates.estimatedStart = accumulatedTime;
+            accumulatedTime += leg.targetSplit;
+            estimates.estimatedEnd = accumulatedTime;
+          }
+
           return (
             <div className="legs__item" key={index}>
-              <Leg legData={leg}/>
+              <Leg legData={leg} legEstimates={estimates}/>
             </div>
           );
         }, this)}

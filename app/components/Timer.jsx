@@ -41,7 +41,7 @@ export default class Timer extends React.Component {
   }
 
   tick() {
-    console.log('Timer tick happening');
+    //console.log('Timer tick happening');
     this.setState({
       elapsed: Moment().valueOf() - this.props.startDate
     });
