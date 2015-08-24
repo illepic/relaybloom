@@ -59,7 +59,7 @@ export default class Tracker extends ParseComponent {
       <div className="RELAYbloomTracker tracker">
 
         <h2 className="text-center">
-          <small>{_.get(this.data.race, 'raceName', '')}, {this.props.raceId}, test: {_.get(this.data.race, 'currentLeg')}</small>
+          <small>{_.get(this.data.race, 'raceName', '')}<br/>Race ID: {this.props.raceId}, Leg: {_.get(this.data.race, 'currentLeg')}</small>
           <br/>
           <small>Started: {Moment(_.get(this.data.race, 'raceStart', Moment().valueOf())).format('ddd, MMM D HH:mm:ss')}</small>
         </h2>

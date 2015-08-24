@@ -30,7 +30,7 @@ export default class Timer extends React.Component {
     }
 
     let elapsed = (this.state.elapsed) ? this.state.elapsed : this.props.endDate - this.props.startDate;
-
+    
     return (
       <span className="timer">
         <Glyphicon glyph='time'/>

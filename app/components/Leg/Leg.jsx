@@ -38,9 +38,6 @@ export default class Leg extends React.Component {
 
     let legProgress = (this.state.legElapsed / this.props.legData.targetSplit) * 100;
 
-    // Prediction time
-    let testLegVal = _.get(this.props.legCalc, "split", 0);
-
     return (
       <div className={classNames(legClasses)}>
         <div className="leg__info">
@@ -48,7 +45,7 @@ export default class Leg extends React.Component {
 
             <div className="pull-left">
               <span className="label label-default leg__abbrv-label">L{this.props.legData.legId}</span>
-              <strong className="leg__racer-name">{this.props.legData.racer.name}, {testLegVal}</strong>
+              <strong className="leg__racer-name">{this.props.legData.racer.name}</strong>
             </div>
 
             <div className="pull-right">
