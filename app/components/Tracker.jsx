@@ -119,7 +119,6 @@ export default class Tracker extends ParseComponent {
 
   }
 
-
   handoff() {
 
     let previousLeg = this.data.race.currentLeg;

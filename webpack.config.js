@@ -39,9 +39,9 @@ var common = {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      title: 'relayBloom App'
-    })
+    //new HtmlWebpackPlugin({
+    //  title: 'relayBloom App'
+    //})
   ]
 };
 
