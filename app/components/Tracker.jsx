@@ -164,7 +164,13 @@ export default class Tracker extends ParseComponent {
       currentLeg: nextLeg
     }).dispatch({batch:batch});
 
-    batch.dispatch();
+    let that = this;
+    batch.dispatch().then(
+      function(object) {
+        console.log("Handoff successful");
+        that.emit();
+      }
+    );
 
   }
 }
