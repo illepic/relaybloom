@@ -10,10 +10,20 @@ export default class Legs extends ParseComponent {
   }
 
   observe(props, state) {
+
+    // Our props changed via currentLeg, a sign websockets told us to update
+    if (props.currentLeg != 0) {
+      this.refreshQueries();
+    }
+
     // this.props.race is a Parse Race object set to the race loaded via url
     return {
       legs: (new Parse.Query("Leg").equalTo("race", this.props.race)).include("racer").ascending('legId')
     };
+  }
+
+  refresh () {
+    this.refreshQueries();
   }
 
   render() {

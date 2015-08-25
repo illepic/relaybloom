@@ -22,10 +22,6 @@ export default class TrackerWrapper extends React.Component {
     this.socket = io();
     // Create room for just this race
     this.socket.emit('create', this.props.params.trackerId);
-    // Reply to all events (for this room)
-    this.socket.on('leg handoff', function(msg) {
-      alert(msg.message);
-    });
 
     // Localstorage dance here
   }

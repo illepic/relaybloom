@@ -20,6 +20,7 @@ export default class Tracker extends ParseComponent {
     this.handoff = this.handoff.bind(this);
     this.clear = this.clear.bind(this);
     this.emit = this.emit.bind(this);
+    this.refresh = this.refresh.bind(this);
 
     var topScope = this;
     this.legs = [];
@@ -42,6 +43,14 @@ export default class Tracker extends ParseComponent {
 
     // Socket setup
     this.socket = io();
+    // Reply to all events (for this room)
+    this.socket.on('leg handoff', function(msg) {
+      // Refresh A) current Race, B) Legs (by updating Legs currentLeg prop
+      topScope.refresh(msg.leg);
+    });
+
+    // Used to communicate that leg queries should update
+    this.currentLeg = 0;
   }
 
   observe(props, state) {
@@ -49,6 +58,11 @@ export default class Tracker extends ParseComponent {
     return {
       race: (new Parse.Query("Race")).observeOne(this.props.race.id)
     }
+  }
+
+  refresh(leg) {
+    this.refreshQueries();
+    this.currentLeg = leg;
   }
 
   render() {
@@ -70,7 +84,7 @@ export default class Tracker extends ParseComponent {
         <div className="panel panel-primary">
           <div className="panel-heading"><span className="label label-info">L1-L6</span> <span>Van 1 (test)</span></div>
 
-          <Legs race={this.props.race}/>
+          <Legs race={this.props.race} currentLeg={this.currentLeg}/>
 
         </div>
 
@@ -81,9 +95,9 @@ export default class Tracker extends ParseComponent {
     );
   }
 
-  emit() {
+  emit(leg) {
     // Race objectid goes here
-    this.socket.emit('leg handoff', {room: this.props.raceId, message: 'hello world'});
+    this.socket.emit('leg handoff', {room: this.props.raceId, leg: leg});
   }
 
   // Wipe all race data to test
@@ -165,7 +179,7 @@ export default class Tracker extends ParseComponent {
     batch.dispatch().then(
       function(object) {
         console.log("Handoff successful");
-        that.emit();
+        that.emit(nextLeg);
       }
     );
 
