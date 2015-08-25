@@ -3,8 +3,7 @@
 import React from 'react';
 import {Parse} from 'parse';
 import Tracker from './../components/Tracker';
-
-//import RaceData from '../libs/racedata';
+import io from 'socket.io-client';
 
 // A way for us to pass props to just this
 export default class TrackerWrapper extends React.Component {
@@ -18,6 +17,15 @@ export default class TrackerWrapper extends React.Component {
     let Race = Parse.Object.extend("Race");
     this.raceLookup = new Race();
     this.raceLookup.id = this.props.params.trackerId;
+
+    // Socket setup
+    this.socket = io();
+    // Create room for just this race
+    this.socket.emit('create', this.props.params.trackerId);
+    // Reply to all events (for this room)
+    this.socket.on('leg handoff', function(msg) {
+      alert(msg.message);
+    });
 
     // Localstorage dance here
   }

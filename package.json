@@ -13,7 +13,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "TARGET=build webpack",
     "winbuild": "set TARGET=build&& webpack",
-    "start": "TARGET=dev webpack-dev-server --devtool eval --progress --colors --hot --inline --history-api-fallback --host 0.0.0.0",
+    "start": "TARGET=dev webpack-dev-server --devtool eval --progress --colors --hot --inline --history-api-fallback --host 0.0.0.0 --content-base build/",
     "winstart": "set TARGET=dev&&webpack-dev-server --devtool eval --progress --colors --hot --inline --history-api-fallback --content-base build/",
     "postinstall": "cp -a ./node_modules/bootswatch/bower_components/bootstrap/fonts ./node_modules/bootswatch",
     "express-start": "node relaybloomserver"

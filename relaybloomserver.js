@@ -7,7 +7,6 @@ var io = require('socket.io')(http);
 
 var isProduction = process.env.TARGET === 'production';
 var port = isProduction ? 80 : 3000;
-console.log(port);
 
 var buildPath = path.resolve(__dirname, 'build');
 var publicPath = path.resolve(__dirname, 'public');
@@ -20,8 +19,11 @@ app.use(express.static('public'));
 app.use(express.static('build'));
 
 io.on('connection', function(socket){
+  socket.on('create', function(room) {
+    socket.join(room);
+  });
   socket.on('leg handoff', function(msg){
-    socket.broadcast.emit('leg handoff', msg);
+    socket.broadcast.to(msg.room).emit('leg handoff', msg);
   });
 });
 

@@ -40,11 +40,8 @@ export default class Tracker extends ParseComponent {
       }
     });
 
+    // Socket setup
     this.socket = io();
-    this.socket.on('leg handoff', function(msg) {
-      alert(msg);
-    });
-
   }
 
   observe(props, state) {
@@ -86,7 +83,7 @@ export default class Tracker extends ParseComponent {
 
   emit() {
     // Race objectid goes here
-    this.socket.emit('leg handoff', 'hello world');
+    this.socket.emit('leg handoff', {room: this.props.raceId, message: 'hello world'});
   }
 
   // Wipe all race data to test
