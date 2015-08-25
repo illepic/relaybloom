@@ -5,6 +5,10 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var isProduction = process.env.TARGET === 'production';
+var port = isProduction ? 80 : 3000;
+console.log(port);
+
 var buildPath = path.resolve(__dirname, 'build');
 var publicPath = path.resolve(__dirname, 'public');
 
@@ -21,6 +25,6 @@ io.on('connection', function(socket){
   });
 });
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+http.listen(port, function(){
+  console.log('listening on *:' + port);
 });
