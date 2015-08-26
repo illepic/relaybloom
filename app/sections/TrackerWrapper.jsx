@@ -42,7 +42,6 @@ export default class TrackerWrapper extends React.Component {
 
     // Localstorage dance here
 
-    //<Tracker raceId={this.props.params.trackerId} race={this.raceLookup}/>
   }
   render() {
     return(

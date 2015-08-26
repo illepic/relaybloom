@@ -7,15 +7,12 @@ import _ from 'lodash';
 import {Parse} from 'parse';
 import ParseReact from 'parse-react';
 import ParseComponent from 'parse-react/class';
-
 import io from 'socket.io-client';
+import store from 'store';
 
 import Timer from './Timer';
 import Leg from './Leg/Leg';
 import Legs from './Legs/Legs';
-
-import store from 'store';
-
 
 export default class Tracker extends ParseComponent {
   constructor(props) {
@@ -24,6 +21,7 @@ export default class Tracker extends ParseComponent {
     this.clear = this.clear.bind(this);
     this.emit = this.emit.bind(this);
     this.refresh = this.refresh.bind(this);
+    this.reconcile = this.reconcile.bind(this);
 
     this.legs = [];
 
@@ -55,9 +53,6 @@ export default class Tracker extends ParseComponent {
 
     // Used to communicate that leg queries should update
     this.currentLeg = 0;
-
-    //store.set(this.raceId, 1);
-    //console.log(store.get(this.raceId));
 
   }
 
@@ -94,6 +89,7 @@ export default class Tracker extends ParseComponent {
         <Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.clear}>Clear</Button>
 
         <Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.emit}>Emit Stuff</Button>
+        <Button bsStyle='warning' className='btn-block text-uppercase clear-button' onClick={this.reconcile}>Reconcile</Button>
       </div>
     );
   }
@@ -187,11 +183,29 @@ export default class Tracker extends ParseComponent {
       },
       // Failure
       (message) => {
-        //store.set(this.props.)
+        store.set(this.raceId, {batch: batch})
+        console.log(batch);
         console.log(this.raceId);
       }
     );
 
+  }
+
+  reconcile() {
+    let reconcilliations = store.get(this.raceId.batch); // only handles single batch, need multiple
+
+    // Loop here over values in reconcilliations, create a bunch of Mutations.set's
+
+    let batch = new ParseReact.Mutation.Batch();
+
+    batch.dispatch().then(
+      (object) => {
+        console.log('recon success');
+      },
+      (message) => {
+        console.log('recon failure');
+      }
+    )
   }
 }
 
