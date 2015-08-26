@@ -70,7 +70,7 @@ export default class Tracker extends ParseComponent {
 
   render() {
     return (
-      <div className="RELAYbloomTracker tracker">
+      <div className="RELAYbloomTracker tracker container">
 
         <h2 className="text-center">
           <small>{_.get(this.data.race, 'raceName', '')}<br/>Race ID: {this.raceId}, Leg: {_.get(this.data.race, 'currentLeg')}</small>

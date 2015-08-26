@@ -33,7 +33,10 @@ export default class Leg extends React.Component {
 
     const legClasses = {
       'leg': true,
+      'panel': true,
+      'panel-default': true,
       'leg--active': this.props.legData.isActive,
+      'panel-primary': this.props.legData.isActive,
       'leg--done': !!this.props.legData.dateCompleted,
       'leg--upcoming': !this.props.legData.dateStarted
     };
@@ -42,51 +45,54 @@ export default class Leg extends React.Component {
 
     return (
       <div className={classNames(legClasses)}>
-        <div className="leg__info">
-          <div className="clearfix">
 
-            <div className="pull-left">
-              <span className="label label-default leg__abbrv-label">L{this.props.legData.legId}</span>
-              <strong className="leg__racer-name">{this.props.legData.racer.name}</strong>
-            </div>
-
-            <div className="pull-right">
+        <div className="panel-heading clearfix">
+          <h3 className="panel-title pull-left">
+            <span className="label label-default leg__abbrv-label">L{this.props.legData.legId}</span>
+            <strong className="leg__racer-name">{this.props.legData.racer.name}</strong>
+          </h3>
+          <div className="pull-right">
               <span className="badge leg__timer">
                 <span className="leg__distance"><Glyphicon glyph='move'/>{this.props.legData.legDistance}mi</span>
                 <span className="leg__split">{Moment.duration(this.props.legData.targetSplit).format()}</span>
               </span>
-            </div>
-
           </div>
-          <table className="table leg-dates">
-            <tbody>
-              <tr className="leg-dates__est-start">
-                <th className="leg__dates-label"><span className="label label-warning text-uppercase">Est. Start Date</span></th>
-                <td>{this.estimatedStartDate()}</td>
-              </tr>
-              <tr className="leg-dates__real-start">
-                <th className="leg__dates-label"><span className="label label-success text-uppercase">Real Start Date</span></th>
-                <td>{this.shortDate(this.props.legData.dateStarted)}</td>
-              </tr>
-
-              <tr className="leg-dates__est-end">
-                <th className="leg__dates-label"><span  className="label label-warning text-uppercase">Est. End Date</span></th>
-                <td>{this.estimatedEndDate()}</td>
-              </tr>
-              <tr className="leg-dates__real-end">
-                <th className="leg__dates-label"><span  className="label label-success text-uppercase">Real End Date</span></th>
-                <td>{this.shortDate(this.props.legData.dateCompleted)}</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
 
-        <ProgressBar className="leg__progress" bsStyle="success" now={legProgress}/>
+        <div className="panel-body">
 
-        <h3 className="leg__progress-text text-center">
-          <TimerStatic elapsed={this.state.legElapsed} totalTime={this.props.legData.targetSplit}/>
-        </h3>
+          <div className="leg__info">
 
+            <table className="table leg-dates">
+              <tbody>
+                <tr className="leg-dates__est-start">
+                  <th className="leg__dates-label"><span className="label label-warning text-uppercase">Est. Start Date</span></th>
+                  <td>{this.estimatedStartDate()}</td>
+                </tr>
+                <tr className="leg-dates__real-start">
+                  <th className="leg__dates-label"><span className="label label-success text-uppercase">Real Start Date</span></th>
+                  <td>{this.shortDate(this.props.legData.dateStarted)}</td>
+                </tr>
+
+                <tr className="leg-dates__est-end">
+                  <th className="leg__dates-label"><span  className="label label-warning text-uppercase">Est. End Date</span></th>
+                  <td>{this.estimatedEndDate()}</td>
+                </tr>
+                <tr className="leg-dates__real-end">
+                  <th className="leg__dates-label"><span  className="label label-success text-uppercase">Real End Date</span></th>
+                  <td>{this.shortDate(this.props.legData.dateCompleted)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <ProgressBar className="leg__progress" bsStyle="success" now={legProgress}/>
+
+          <h3 className="leg__progress-text text-center">
+            <TimerStatic elapsed={this.state.legElapsed} totalTime={this.props.legData.targetSplit}/>
+          </h3>
+
+        </div>
       </div>
     );
   }
