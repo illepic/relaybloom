@@ -81,12 +81,7 @@ export default class Tracker extends ParseComponent {
 
         <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handoff}>Handoff</Button>
 
-        <div className="panel panel-primary">
-          <div className="panel-heading"><span className="label label-info">L1-L6</span> <span>Van 1 (test)</span></div>
-
-          <Legs race={this.props.race} currentLeg={this.currentLeg}/>
-
-        </div>
+        <Legs race={this.props.race} currentLeg={this.currentLeg}/>
 
         <Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.clear}>Clear</Button>
 

@@ -33,7 +33,9 @@ export default class Leg extends React.Component {
 
     const legClasses = {
       'leg': true,
-      'leg--active': this.props.legData.isActive
+      'leg--active': this.props.legData.isActive,
+      'leg--done': !!this.props.legData.dateCompleted,
+      'leg--upcoming': !this.props.legData.dateStarted
     };
 
     let legProgress = (this.state.legElapsed / this.props.legData.targetSplit) * 100;
@@ -56,22 +58,22 @@ export default class Leg extends React.Component {
             </div>
 
           </div>
-          <table className="table leg__dates">
+          <table className="table leg-dates">
             <tbody>
-              <tr>
+              <tr className="leg-dates__est-start">
                 <th className="leg__dates-label"><span className="label label-warning text-uppercase">Est. Start Date</span></th>
                 <td>{this.estimatedStartDate()}</td>
               </tr>
-              <tr>
+              <tr className="leg-dates__real-start">
                 <th className="leg__dates-label"><span className="label label-success text-uppercase">Real Start Date</span></th>
                 <td>{this.shortDate(this.props.legData.dateStarted)}</td>
               </tr>
 
-              <tr>
+              <tr className="leg-dates__est-end">
                 <th className="leg__dates-label"><span  className="label label-warning text-uppercase">Est. End Date</span></th>
                 <td>{this.estimatedEndDate()}</td>
               </tr>
-              <tr>
+              <tr className="leg-dates__real-end">
                 <th className="leg__dates-label"><span  className="label label-success text-uppercase">Real End Date</span></th>
                 <td>{this.shortDate(this.props.legData.dateCompleted)}</td>
               </tr>
@@ -105,7 +107,7 @@ export default class Leg extends React.Component {
   }
 
   shortDate(date) {
-    const shortMomentFormat = 'ddd D, HH:mm:ss';
+    const shortMomentFormat = 'ddd, HH:mm:ss';
 
     if (!!date) {
       return Moment(date).format(shortMomentFormat);

@@ -14,9 +14,9 @@ export default class Timer extends React.Component {
   render() {
     return (
       <span className="timer">
-        <Glyphicon glyph='time'/>
-        <strong><span>{Moment.duration(this.props.elapsed).format()}</span></strong>
-        <span> / </span> <span>{Moment.duration(this.props.totalTime).format()}</span>
+        <Glyphicon glyph='time'/><span className="spacer">&nbsp;</span>
+        <strong><span>{Moment.duration(this.props.elapsed).format("H:mm:ss", {trim:false})}</span></strong>
+        <span> / </span> <span>{Moment.duration(this.props.totalTime).format("H:mm:ss", {trim:false})}</span>
       </span>
     );
   }

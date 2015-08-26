@@ -3,17 +3,46 @@
   border-bottom: 1px solid lightgrey;
 }
 .leg--active {
-  border-top: 5px solid #18bc9c;
+  border-top: 5px solid #3498db;
 }
+.leg--done {
+  background-color: #ecf0f1;
+}
+.leg--upcoming {
+  background-color: #ecf0f1;
+}
+
 .leg__info {
   margin-bottom: 10px;
 }
 .leg__progress {
   margin-bottom: 10px;
 }
-.leg__dates {
+.leg-dates {
   margin-top: 10px;
 }
+.leg-dates__est-start {
+  .leg--done &,
+  .leg--active & {
+    display: none;
+  }
+}
+.leg-dates__est-end {
+  .leg--done & {
+    display: none;
+  }
+}
+.leg-dates__real-start {
+  .leg--upcoming & {
+    display: none;
+  }
+}
+.leg-dates__real-end {
+  .leg--upcoming & {
+    display: none;
+  }
+}
+
 .leg__dates-label {
   text-align: right;
 }
