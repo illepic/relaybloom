@@ -14,6 +14,7 @@ import Timer from './Timer';
 import Leg from './Leg/Leg';
 import Legs from './Legs/Legs';
 
+
 export default class Tracker extends ParseComponent {
   constructor(props) {
     super(props);
@@ -51,6 +52,7 @@ export default class Tracker extends ParseComponent {
 
     // Used to communicate that leg queries should update
     this.currentLeg = 0;
+
   }
 
   observe(props, state) {

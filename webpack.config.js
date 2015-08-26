@@ -35,7 +35,8 @@ var common = {
       {
         test: /\.scss$/,
         loader: 'style!css!sass'
-      }
+      },
+      {test: require.resolve('offline-js/offline.min'), loader: 'exports?window.Offline'}
     ]
   },
   plugins: [

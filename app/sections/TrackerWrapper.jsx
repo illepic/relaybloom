@@ -5,6 +5,10 @@ import {Parse} from 'parse';
 import Tracker from './../components/Tracker';
 import io from 'socket.io-client';
 
+require('offline-js/offline.min');
+require('offline-js/themes/offline-theme-default-indicator.css');
+require('offline-js/themes/offline-language-english.css');
+
 // A way for us to pass props to just this
 export default class TrackerWrapper extends React.Component {
   constructor(props) {
@@ -22,6 +26,12 @@ export default class TrackerWrapper extends React.Component {
     this.socket = io();
     // Create room for just this race
     this.socket.emit('create', this.props.params.trackerId);
+
+    // Offline
+    window.Offline.options = {
+      checkOnLoad: true,
+      interceptRequests: false
+    };
 
     // Localstorage dance here
   }
