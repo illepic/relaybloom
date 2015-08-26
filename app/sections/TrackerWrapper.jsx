@@ -5,9 +5,9 @@ import {Parse} from 'parse';
 import Tracker from './../components/Tracker';
 import io from 'socket.io-client';
 
-require('offline-js/offline.min');
-require('offline-js/themes/offline-theme-default-indicator.css');
-require('offline-js/themes/offline-language-english.css');
+//require('offline-js/offline.min');
+//require('offline-js/themes/offline-theme-default-indicator.css');
+//require('offline-js/themes/offline-language-english.css');
 
 // A way for us to pass props to just this
 export default class TrackerWrapper extends React.Component {
@@ -28,16 +28,25 @@ export default class TrackerWrapper extends React.Component {
     this.socket.emit('create', this.props.params.trackerId);
 
     // Offline
-    window.Offline.options = {
-      checkOnLoad: true,
-      interceptRequests: false
-    };
+    //window.Offline.options = {
+    //  checkOnLoad: true,
+    //  interceptRequests: false
+    //};
+
+    window.addEventListener('online', function() {
+      console.log('Online');
+    });
+    window.addEventListener('offline', function() {
+      console.log('Offline');
+    });
 
     // Localstorage dance here
+
+    //<Tracker raceId={this.props.params.trackerId} race={this.raceLookup}/>
   }
   render() {
     return(
-      <Tracker raceId={this.props.params.trackerId} race={this.raceLookup}/>
+      <Tracker race={this.raceLookup}/>
     );
   }
 }

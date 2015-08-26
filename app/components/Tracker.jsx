@@ -14,6 +14,8 @@ import Timer from './Timer';
 import Leg from './Leg/Leg';
 import Legs from './Legs/Legs';
 
+import store from 'store';
+
 
 export default class Tracker extends ParseComponent {
   constructor(props) {
@@ -23,8 +25,9 @@ export default class Tracker extends ParseComponent {
     this.emit = this.emit.bind(this);
     this.refresh = this.refresh.bind(this);
 
-    var topScope = this;
     this.legs = [];
+
+    this.raceId = this.props.race.id;
 
     // Make a query of legs based on current Race. Store basic info about legs
     let Legs = Parse.Object.extend("Leg");
@@ -32,8 +35,8 @@ export default class Tracker extends ParseComponent {
     query.equalTo("race", this.props.race);
 
     query.find({
-      success: function(legs) {
-        topScope.legs = _.map(legs, function(leg) {
+      success: (legs) => {
+        this.legs = _.map(legs, (leg) => {
           return {
             objectId: leg.id,
             legId: leg.get('legId')
@@ -45,13 +48,16 @@ export default class Tracker extends ParseComponent {
     // Socket setup
     this.socket = io();
     // Reply to all events (for this room)
-    this.socket.on('leg handoff', function(msg) {
+    this.socket.on('leg handoff', (msg) => {
       // Refresh A) current Race, B) Legs (by updating Legs currentLeg prop
-      topScope.refresh(msg.leg);
+      this.refresh(msg.leg);
     });
 
     // Used to communicate that leg queries should update
     this.currentLeg = 0;
+
+    //store.set(this.raceId, 1);
+    //console.log(store.get(this.raceId));
 
   }
 
@@ -72,7 +78,7 @@ export default class Tracker extends ParseComponent {
       <div className="RELAYbloomTracker tracker">
 
         <h2 className="text-center">
-          <small>{_.get(this.data.race, 'raceName', '')}<br/>Race ID: {this.props.raceId}, Leg: {_.get(this.data.race, 'currentLeg')}</small>
+          <small>{_.get(this.data.race, 'raceName', '')}<br/>Race ID: {this.raceId}, Leg: {_.get(this.data.race, 'currentLeg')}</small>
           <br/>
           <small>Started: {Moment(_.get(this.data.race, 'raceStart', Moment().valueOf())).format('ddd, MMM D HH:mm:ss')}</small>
         </h2>
@@ -94,7 +100,7 @@ export default class Tracker extends ParseComponent {
 
   emit(leg) {
     // Race objectid goes here
-    this.socket.emit('leg handoff', {room: this.props.raceId, leg: leg});
+    this.socket.emit('leg handoff', {room: this.raceId, leg: leg});
   }
 
   // Wipe all race data to test
@@ -132,6 +138,7 @@ export default class Tracker extends ParseComponent {
     let previousLeg = this.data.race.currentLeg;
     let nextLeg = this.data.race.currentLeg + 1;
     const legCount = this.legs.length;
+    const now = Moment().valueOf();
 
     let batch = new ParseReact.Mutation.Batch();
 
@@ -140,7 +147,7 @@ export default class Tracker extends ParseComponent {
       let previousObjectIdLookup = _.result(_.find(this.legs, 'legId', previousLeg), 'objectId');
       ParseReact.Mutation.Set({className: "Leg", objectId: previousObjectIdLookup}, {
         isActive: false,
-        dateCompleted: Moment().valueOf()
+        dateCompleted: now
       }).dispatch({batch:batch});
     }
 
@@ -149,21 +156,21 @@ export default class Tracker extends ParseComponent {
       let currentObjectIdLookup = _.result(_.find(this.legs, 'legId', nextLeg), 'objectId');
       ParseReact.Mutation.Set({className: "Leg", objectId: currentObjectIdLookup}, {
         isActive: true,
-        dateStarted: Moment().valueOf()
+        dateStarted: now
       }).dispatch({batch:batch});
     }
 
     // If raceStart has not already been sent, send parse query to start race
     if (previousLeg === 0) {
       ParseReact.Mutation.Set(this.data.race, {
-        raceStart: Moment().valueOf()
+        raceStart: now
       }).dispatch({batch:batch});
     }
 
     // Stop if we're on the last
     if (previousLeg === legCount) {
       ParseReact.Mutation.Set(this.data.race, {
-        raceEnd: Moment().valueOf()
+        raceEnd: now
       }).dispatch({batch:batch});
     }
 
@@ -172,11 +179,16 @@ export default class Tracker extends ParseComponent {
       currentLeg: nextLeg
     }).dispatch({batch:batch});
 
-    let that = this;
     batch.dispatch().then(
-      function(object) {
+      // Success
+      (object) => {
         console.log("Handoff successful");
-        that.emit(nextLeg);
+        this.emit(nextLeg);
+      },
+      // Failure
+      (message) => {
+        //store.set(this.props.)
+        console.log(this.raceId);
       }
     );
 
