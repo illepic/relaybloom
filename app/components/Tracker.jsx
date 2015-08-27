@@ -50,11 +50,14 @@ export default class Tracker extends ParseComponent {
       // Refresh A) current Race, B) Legs (by updating Legs currentLeg prop
       this.refresh(msg.leg);
     });
+    this.socket.on('race refresh', () => {
+      // Reload page
+      document.location.reload();
+    });
 
     // Used to communicate that leg queries should update
     // @TODO: Triggering updates in Legs sucks. This goes away when we go back
     // to global state tick
-    //this.currentLeg = 0;
     this.currentLeg = 0;
 
   }
@@ -98,7 +101,6 @@ export default class Tracker extends ParseComponent {
   }
 
   emit(leg) {
-    // Race objectid goes here
     this.socket.emit('leg handoff', {room: this.raceId, leg: leg});
   }
 
@@ -124,10 +126,12 @@ export default class Tracker extends ParseComponent {
     });
 
     clearBatch.dispatch().then(
-      function(object) {
+      (object) => {
         // Nuke localstorage
         store.remove(this.raceId);
+        this.socket.emit('race refresh', {room: this.raceId});
         console.log("Clear successful");
+
         // Reload page
         document.location.reload();
       }
@@ -194,7 +198,6 @@ export default class Tracker extends ParseComponent {
         // Pull the requests array out of the batch so we can remake them later
         let existingFailedRequests = _.toArray(_.get(store.get(this.raceId), 'failedRequests'));
         let newFailedRequests = _.get(batch, "_requests");
-
 
         console.log({failedRequests: existingFailedRequests.concat(newFailedRequests)});
 

@@ -25,6 +25,9 @@ io.on('connection', function(socket){
   socket.on('leg handoff', function(msg){
     socket.broadcast.to(msg.room).emit('leg handoff', msg);
   });
+  socket.on('race refresh', function(msg){
+    socket.broadcast.to(msg.room).emit('race refresh', msg);
+  });
 });
 
 http.listen(port, function(){
