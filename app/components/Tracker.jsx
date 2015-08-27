@@ -193,9 +193,12 @@ export default class Tracker extends ParseComponent {
       // Success
       (object) => {
         console.log("Handoff successful");
-        store.remove(this.raceId); // Set this back to zero because we've obviously reconnected
+        // move this logic into reconcile
+        if (store.get(this.raceId)) {
+          console.log('NEED TO RECONCILE');
+          this.reconcile();
+        }
         this.emit(nextLeg);
-        // Should run reconcilliations here as well
       },
       // Failure
       (message) => {
