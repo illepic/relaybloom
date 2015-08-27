@@ -25,8 +25,12 @@ export default class Tracker extends ParseComponent {
     //this.emit = this.emit.bind(this);
     this.refresh = this.refresh.bind(this);
     this.reconcile = this.reconcile.bind(this);
+
+    // Modals
     this.openHandoffModal = this.openHandoffModal.bind(this);
     this.closeHandoffModal = this.closeHandoffModal.bind(this);
+    this.openClearModal = this.openClearModal.bind(this);
+    this.closeClearModal = this.closeClearModal.bind(this);
 
     this.legs = [];
 
@@ -67,7 +71,8 @@ export default class Tracker extends ParseComponent {
 
     this.state = {
       failedRequests: _.get(store.get(this.raceId), 'failedRequests'),
-      showHandoffModal: false
+      showHandoffModal: false,
+      showClearModal: false
     };
   }
 
@@ -83,6 +88,12 @@ export default class Tracker extends ParseComponent {
   }
   closeHandoffModal() {
     this.setState({showHandoffModal: false});
+  }
+  openClearModal() {
+    this.setState({showClearModal: true});
+  }
+  closeClearModal() {
+    this.setState({showClearModal: false});
   }
 
   refresh(leg) {
@@ -104,15 +115,13 @@ export default class Tracker extends ParseComponent {
           <Timer startDate={_.get(this.data.race, 'raceStart', Moment().valueOf())} endDate={_.get(this.data.race, 'raceEnd', Moment().valueOf())} totalTime={_.get(this.data.race, 'expectedDuration', 0)}/>
         </h1>
 
-
-
         <Button block bsStyle='warning' className='text-uppercase handoff-modal' onClick={this.openHandoffModal}>Prepare to HANDOFF</Button>
 
         <OfflineTable failed={this.state.failedRequests} reconcile={this.reconcile} />
 
         <Legs race={this.props.race} currentLeg={this.currentLeg}/>
 
-        <Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.clear}>Clear</Button>
+        <Button block bsStyle='danger' className='text-uppercase clear-button' onClick={this.openClearModal}>Clear All Data</Button>
 
         {/**<Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.emit}>Emit Stuff</Button>**/}
         {/**<Button bsStyle='warning' className='btn-block text-uppercase clear-button' onClick={this.reconcile}>Reconcile</Button>**/}
@@ -127,6 +136,19 @@ export default class Tracker extends ParseComponent {
           <Modal.Footer>
             <Button block bsStyle='success' className='text-uppercase handoff-button' onClick={this.handoff}>HANDOFF!</Button>
             <Button block onClick={this.closeHandoffModal}>Cancel</Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal show={this.state.showClearModal} onHide={this.closeClearModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Really wipe all race data?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Nuclear option, huh? Do you really want to wipe all race data permanently?</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button bsStyle='danger' block className='text-uppercase clear-button' onClick={this.clear}>Clear</Button>
+            <Button block onClick={this.closeClearModal}>Cancel</Button>
           </Modal.Footer>
         </Modal>
       </div>
