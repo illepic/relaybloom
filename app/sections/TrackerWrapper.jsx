@@ -5,14 +5,15 @@ import {Parse} from 'parse';
 import Tracker from './../components/Tracker';
 import io from 'socket.io-client';
 
-//require('offline-js/offline.min');
-//require('offline-js/themes/offline-theme-default-indicator.css');
-//require('offline-js/themes/offline-language-english.css');
+require('offline-js/offline.min');
+require('offline-js/themes/offline-theme-chrome-indicator.css');
+require('offline-js/themes/offline-language-english-indicator.css');
 
 // A way for us to pass props to just this
 export default class TrackerWrapper extends React.Component {
   constructor(props) {
     super(props);
+    this.checkOffline = this.checkOffline.bind(this);
 
     // Parse key
     Parse.initialize("J0KTo2bvYUhCK8dap1Cbcz0vWK11fXzJ2kHZinx0", "82COMXIuq31Ff0QLuUIjoUOSlt8twxQzTnOmhUQ8");
@@ -28,10 +29,16 @@ export default class TrackerWrapper extends React.Component {
     this.socket.emit('create', this.props.params.trackerId);
 
     // Offline
-    //window.Offline.options = {
-    //  checkOnLoad: true,
-    //  interceptRequests: false
-    //};
+    window.Offline.options = {
+      checkOnLoad: true,
+      interceptRequests: false,
+      checks: {
+        xhr: {
+          url: '/offline'
+        }
+      }
+    };
+    this.offlineInterval = setInterval(this.checkOffline, 10000);
 
     window.addEventListener('online', function() {
       console.log('Online');
@@ -47,5 +54,9 @@ export default class TrackerWrapper extends React.Component {
     return(
       <Tracker race={this.raceLookup}/>
     );
+  }
+
+  checkOffline() {
+    window.Offline.check();
   }
 }

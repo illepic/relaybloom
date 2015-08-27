@@ -15,6 +15,11 @@ var publicPath = path.resolve(__dirname, 'public');
 //  res.sendFile(publicPath + '/relaybloom.html');
 //});
 
+// Used to quickly check offline/online
+app.get('/offline', function(req, res){
+  res.sendStatus(204);
+});
+
 app.use(express.static('public'));
 app.use(express.static('build'));
 
