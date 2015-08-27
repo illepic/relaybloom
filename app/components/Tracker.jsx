@@ -108,14 +108,14 @@ export default class Tracker extends ParseComponent {
 
         <Button block bsStyle='warning' className='text-uppercase handoff-modal' onClick={this.openHandoffModal}>Prepare to HANDOFF</Button>
 
-        <OfflineTable failed={this.state.failedRequests}/>
+        <OfflineTable failed={this.state.failedRequests} reconcile={this.reconcile} />
 
         <Legs race={this.props.race} currentLeg={this.currentLeg}/>
 
         <Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.clear}>Clear</Button>
 
         {/**<Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.emit}>Emit Stuff</Button>**/}
-        <Button bsStyle='warning' className='btn-block text-uppercase clear-button' onClick={this.reconcile}>Reconcile</Button>
+        {/**<Button bsStyle='warning' className='btn-block text-uppercase clear-button' onClick={this.reconcile}>Reconcile</Button>**/}
 
         <Modal show={this.state.showHandoffModal} onHide={this.closeHandoffModal}>
           <Modal.Header closeButton>

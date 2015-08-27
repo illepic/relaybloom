@@ -1,5 +1,5 @@
 import React from 'react';
-import {Panel,Table} from 'react-bootstrap';
+import {Panel, Table, Button} from 'react-bootstrap';
 
 export default class Legs extends React.Component {
   constructor() {
@@ -13,7 +13,7 @@ export default class Legs extends React.Component {
     }
     else {
       return (
-        <Panel bsStyle="danger" header="Offline Data To Sync">
+        <Panel bsStyle="danger" header="Offline Data To Sync" className="offline-table">
 
           <Table fill>
             <thead>
@@ -28,12 +28,13 @@ export default class Legs extends React.Component {
               return (
                 <tr key={index}>
                   <td>{fail.objectId}</td>
+                  <td>{fail.className}</td>
                 </tr>
               );
             })}
             </tbody>
           </Table>
-
+          <Button block bsStyle='success' className='text-uppercase clear-button' onClick={this.props.reconcile}>Reconcile When Online</Button>
         </Panel>
       );
     }
