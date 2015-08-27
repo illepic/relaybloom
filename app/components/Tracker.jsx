@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import {Button} from 'react-bootstrap';
+import {Button, Modal} from 'react-bootstrap';
 import Moment from 'moment';
 import _ from 'lodash';
 import {Parse} from 'parse';
@@ -25,6 +25,8 @@ export default class Tracker extends ParseComponent {
     //this.emit = this.emit.bind(this);
     this.refresh = this.refresh.bind(this);
     this.reconcile = this.reconcile.bind(this);
+    this.openHandoffModal = this.openHandoffModal.bind(this);
+    this.closeHandoffModal = this.closeHandoffModal.bind(this);
 
     this.legs = [];
 
@@ -63,7 +65,10 @@ export default class Tracker extends ParseComponent {
     // to global state tick
     this.currentLeg = 0;
 
-    this.state = {failedRequests: _.get(store.get(this.raceId), 'failedRequests')};
+    this.state = {
+      failedRequests: _.get(store.get(this.raceId), 'failedRequests'),
+      showHandoffModal: false
+    };
   }
 
   observe(props, state) {
@@ -71,6 +76,13 @@ export default class Tracker extends ParseComponent {
     return {
       race: (new Parse.Query("Race")).observeOne(this.props.race.id)
     }
+  }
+
+  openHandoffModal() {
+    this.setState({showHandoffModal: true});
+  }
+  closeHandoffModal() {
+    this.setState({showHandoffModal: false});
   }
 
   refresh(leg) {
@@ -94,7 +106,7 @@ export default class Tracker extends ParseComponent {
 
 
 
-        <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handoff}>Handoff</Button>
+        <Button block bsStyle='warning' className='text-uppercase handoff-modal' onClick={this.openHandoffModal}>Prepare to HANDOFF</Button>
 
         <OfflineTable failed={this.state.failedRequests}/>
 
@@ -104,6 +116,19 @@ export default class Tracker extends ParseComponent {
 
         {/**<Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.emit}>Emit Stuff</Button>**/}
         <Button bsStyle='warning' className='btn-block text-uppercase clear-button' onClick={this.reconcile}>Reconcile</Button>
+
+        <Modal show={this.state.showHandoffModal} onHide={this.closeHandoffModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Handoff next leg of race?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Warning! This CANNOT BE UNDONE. Please only click HANDOFF! a single time. If offline, the time and leg will be stored until you're online again.</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button block bsStyle='success' className='text-uppercase handoff-button' onClick={this.handoff}>HANDOFF!</Button>
+            <Button block onClick={this.closeHandoffModal}>Cancel</Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
@@ -193,6 +218,8 @@ export default class Tracker extends ParseComponent {
     ParseReact.Mutation.Set(this.data.race, {
       currentLeg: nextLeg
     }).dispatch({batch:batch});
+
+    this.closeHandoffModal();
 
     // DISPATCH ALL MUTATIONS
     batch.dispatch().then(

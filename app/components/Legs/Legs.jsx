@@ -4,6 +4,8 @@ import ParseComponent from 'parse-react/class';
 
 import Leg from '../Leg/Leg';
 
+require('./legs.scss');
+
 export default class Legs extends ParseComponent {
   constructor() {
     super();
