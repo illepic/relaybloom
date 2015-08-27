@@ -19,7 +19,7 @@ export default class Tracker extends ParseComponent {
     super(props);
     this.handoff = this.handoff.bind(this);
     this.clear = this.clear.bind(this);
-    this.emit = this.emit.bind(this);
+    //this.emit = this.emit.bind(this);
     this.refresh = this.refresh.bind(this);
     this.reconcile = this.reconcile.bind(this);
 
@@ -52,6 +52,9 @@ export default class Tracker extends ParseComponent {
     });
 
     // Used to communicate that leg queries should update
+    // @TODO: Triggering updates in Legs sucks. This goes away when we go back
+    // to global state tick
+    //this.currentLeg = 0;
     this.currentLeg = 0;
 
   }
@@ -88,7 +91,7 @@ export default class Tracker extends ParseComponent {
 
         <Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.clear}>Clear</Button>
 
-        <Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.emit}>Emit Stuff</Button>
+        {/**<Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.emit}>Emit Stuff</Button>**/}
         <Button bsStyle='warning' className='btn-block text-uppercase clear-button' onClick={this.reconcile}>Reconcile</Button>
       </div>
     );
@@ -122,7 +125,10 @@ export default class Tracker extends ParseComponent {
 
     clearBatch.dispatch().then(
       function(object) {
+        // Nuke localstorage
+        store.remove(this.raceId);
         console.log("Clear successful");
+        // Reload page
         document.location.reload();
       }
     );
@@ -131,10 +137,11 @@ export default class Tracker extends ParseComponent {
 
   handoff() {
 
-    let previousLeg = this.data.race.currentLeg;
-    let nextLeg = this.data.race.currentLeg + 1;
     const legCount = this.legs.length;
     const now = Moment().valueOf();
+
+    let previousLeg = this.data.race.currentLeg;
+    let nextLeg = this.data.race.currentLeg + 1;
 
     let batch = new ParseReact.Mutation.Batch();
 
@@ -175,6 +182,7 @@ export default class Tracker extends ParseComponent {
       currentLeg: nextLeg
     }).dispatch({batch:batch});
 
+    // DISPATCH ALL MUTATIONS
     batch.dispatch().then(
       // Success
       (object) => {
@@ -183,29 +191,52 @@ export default class Tracker extends ParseComponent {
       },
       // Failure
       (message) => {
-        store.set(this.raceId, {batch: batch})
-        console.log(batch);
-        console.log(this.raceId);
+        // Pull the requests array out of the batch so we can remake them later
+        let existingFailedRequests = _.toArray(_.get(store.get(this.raceId), 'failedRequests'));
+        let newFailedRequests = _.get(batch, "_requests");
+
+
+        console.log({failedRequests: existingFailedRequests.concat(newFailedRequests)});
+
+        // Smoosh together exiting requests and new requests into new array
+        store.set(this.raceId, {
+          failedRequests: existingFailedRequests.concat(newFailedRequests)
+        });
+
       }
     );
 
   }
 
   reconcile() {
-    let reconcilliations = store.get(this.raceId.batch); // only handles single batch, need multiple
-
-    // Loop here over values in reconcilliations, create a bunch of Mutations.set's
 
     let batch = new ParseReact.Mutation.Batch();
 
+    // Get store.[raceid].failedRequests array
+    let reconcilliations = store.getAll()[this.raceId].failedRequests;
+
+    // Loop through all stored, failed requests and make new Parse Mutations
+    _.forEach(reconcilliations, (request) => {
+      ParseReact.Mutation.Set(
+        {className: request.className, objectId: request.objectId},
+        request.data
+      ).dispatch({batch:batch});
+    });
+
+    // Run all new Parse mutations
     batch.dispatch().then(
+      // Success
       (object) => {
-        console.log('recon success');
+        store.remove(this.raceId);
+        this.emit(this.data.race.currentLeg + 1);
+        console.log('Reconcilliation success!');
       },
+      // Failure
       (message) => {
-        console.log('recon failure');
+        console.log('Reconcilliation failed!');
       }
-    )
+    );
+
   }
 }
 
