@@ -15,6 +15,7 @@ require('offline-js/offline.min');
 import Timer from './Timer';
 import Leg from './Leg/Leg';
 import Legs from './Legs/Legs';
+import OfflineTable from './OfflineTable';
 
 export default class Tracker extends ParseComponent {
   constructor(props) {
@@ -62,6 +63,7 @@ export default class Tracker extends ParseComponent {
     // to global state tick
     this.currentLeg = 0;
 
+    this.state = {failedRequests: _.get(store.get(this.raceId), 'failedRequests')};
   }
 
   observe(props, state) {
@@ -90,7 +92,11 @@ export default class Tracker extends ParseComponent {
           <Timer startDate={_.get(this.data.race, 'raceStart', Moment().valueOf())} endDate={_.get(this.data.race, 'raceEnd', Moment().valueOf())} totalTime={_.get(this.data.race, 'expectedDuration', 0)}/>
         </h1>
 
+
+
         <Button bsStyle='warning' className='btn-block text-uppercase handoff-button' onClick={this.handoff}>Handoff</Button>
+
+        <OfflineTable failed={this.state.failedRequests}/>
 
         <Legs race={this.props.race} currentLeg={this.currentLeg}/>
 
@@ -193,14 +199,14 @@ export default class Tracker extends ParseComponent {
       // Success
       (object) => {
         console.log("Handoff successful");
-        // move this logic into reconcile
+        // move this logic into reconcile and get it out of Handoff
         if (store.get(this.raceId)) {
           console.log('NEED TO RECONCILE');
           this.reconcile();
         }
         this.emit(nextLeg);
       },
-      // Failure
+      // Failure, MOVE ALL THIS SHIT TO IT'S OWN LIBRARY
       (message) => {
 
         // Pull from store once
@@ -234,6 +240,9 @@ export default class Tracker extends ParseComponent {
 
         localStore.failedRequests = existingFailedRequests.concat(fixedFailedRequests);
 
+        // Put this on state to get to later
+        this.setState({failedRequests:localStore.failedRequests});
+
         console.log(localStore);
 
         // Smoosh together exiting requests and new requests into new array
@@ -265,6 +274,7 @@ export default class Tracker extends ParseComponent {
       // Success
       (object) => {
         store.remove(this.raceId);
+        this.setState({failedRequests: []});
         this.emit(this.data.race.currentLeg + 1);
         console.log('Reconcilliation success!');
       },
