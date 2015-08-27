@@ -10,6 +10,8 @@ import ParseComponent from 'parse-react/class';
 import io from 'socket.io-client';
 import store from 'store';
 
+require('offline-js/offline.min');
+
 import Timer from './Timer';
 import Leg from './Leg/Leg';
 import Legs from './Legs/Legs';
@@ -191,20 +193,48 @@ export default class Tracker extends ParseComponent {
       // Success
       (object) => {
         console.log("Handoff successful");
+        store.remove(this.raceId); // Set this back to zero because we've obviously reconnected
         this.emit(nextLeg);
+        // Should run reconcilliations here as well
       },
       // Failure
       (message) => {
-        // Pull the requests array out of the batch so we can remake them later
-        let existingFailedRequests = _.toArray(_.get(store.get(this.raceId), 'failedRequests'));
+
+        // Pull from store once
+        let localStore = (store.get(this.raceId)) ? store.get(this.raceId) : {};
+        //console.log(localStore);
+        localStore.startingOfflineLegNum = (localStore.startingOfflineLegNum) ? localStore.startingOfflineLegNum : nextLeg;
+        localStore.offlineHandoffCount = (localStore.offlineHandoffCount >= 0) ? localStore.offlineHandoffCount + 1 : 1;
+
+        // These may already exist if we're handing off multiple times offline
+        let existingFailedRequests = _.toArray(_.get(localStore, 'failedRequests'));
+        // These just came in from a failed batch, we need to mess with
         let newFailedRequests = _.get(batch, "_requests");
 
-        console.log({failedRequests: existingFailedRequests.concat(newFailedRequests)});
+        // Put notes here about what the fuck you're doing and why
+        let previousLeg = localStore.startingOfflineLegNum + localStore.offlineHandoffCount - 2;
+        let currentLeg = localStore.startingOfflineLegNum + localStore.offlineHandoffCount - 1;
+        let fixedFailedRequests= _.map(newFailedRequests, (request) => {
+          // Previous leg
+          if (!request.data.isActive && request.className === 'Leg') {
+            request.objectId = _.result(_.find(this.legs, 'legId', previousLeg), 'objectId');
+          }
+          // current active leg
+          if (request.data.isActive && request.className === 'Leg') {
+            request.objectId = _.result(_.find(this.legs, 'legId', currentLeg), 'objectId');
+          }
+          if (request.className === 'Race') {
+            request.data.currentLeg = currentLeg;
+          }
+          return request;
+        });
+
+        localStore.failedRequests = existingFailedRequests.concat(fixedFailedRequests);
+
+        console.log(localStore);
 
         // Smoosh together exiting requests and new requests into new array
-        store.set(this.raceId, {
-          failedRequests: existingFailedRequests.concat(newFailedRequests)
-        });
+        store.set(this.raceId, localStore);
 
       }
     );
@@ -220,6 +250,7 @@ export default class Tracker extends ParseComponent {
 
     // Loop through all stored, failed requests and make new Parse Mutations
     _.forEach(reconcilliations, (request) => {
+      console.log('reconcile requests', request);
       ParseReact.Mutation.Set(
         {className: request.className, objectId: request.objectId},
         request.data
