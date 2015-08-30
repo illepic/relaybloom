@@ -26,7 +26,7 @@ export default class Legs extends React.Component {
             {this.props.failed.map(function(fail, index) {
               console.log(fail);
               return (
-                <tr key={index}>
+                <tr key={"failure_" + index}>
                   <td>{fail.objectId}</td>
                   <td>{fail.className}</td>
                 </tr>

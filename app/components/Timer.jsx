@@ -30,11 +30,11 @@ export default class Timer extends React.Component {
     }
 
     let elapsed = (this.state.elapsed) ? this.state.elapsed : this.props.endDate - this.props.startDate;
-    
+
     return (
       <span className="timer">
         <Glyphicon glyph='time'/>
-        <strong><span>{Moment.duration(elapsed).format()}</span></strong>
+        <strong><span>{Moment.duration(elapsed).format('HH:mm:ss')}</span></strong>
         <span> / </span> <span>{Moment.duration(this.props.totalTime).format()}</span>
       </span>
     );
