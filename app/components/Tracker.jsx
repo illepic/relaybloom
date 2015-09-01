@@ -77,7 +77,6 @@ export default class Tracker extends ParseComponent {
   }
 
   observe(props, state) {
-    // Run adjustments
     return {
       race: (new Parse.Query("Race")).observeOne(this.props.race.id)
     }
@@ -115,7 +114,7 @@ export default class Tracker extends ParseComponent {
           <Timer startDate={_.get(this.data.race, 'raceStart', Moment().valueOf())} endDate={_.get(this.data.race, 'raceEnd', Moment().valueOf())} totalTime={_.get(this.data.race, 'expectedDuration', 0)}/>
         </h1>
 
-        <Button block bsStyle='warning' className='text-uppercase handoff-modal' onClick={this.openHandoffModal}>Prepare to HANDOFF</Button>
+        <Button block disabled bsStyle='warning' className='text-uppercase handoff-modal' onClick={(_.get(this.data.race, 'raceEnd')) ? null : this.openHandoffModal}>Prepare to HANDOFF</Button>
 
         <OfflineTable failed={this.state.failedRequests} reconcile={this.reconcile} />
 
@@ -123,16 +122,16 @@ export default class Tracker extends ParseComponent {
 
         <Button block bsStyle='danger' className='text-uppercase clear-button' onClick={this.openClearModal}>Clear All Data</Button>
 
-        {/**<Button bsStyle='danger' className='btn-block text-uppercase clear-button' onClick={this.emit}>Emit Stuff</Button>**/}
-        {/**<Button bsStyle='warning' className='btn-block text-uppercase clear-button' onClick={this.reconcile}>Reconcile</Button>**/}
-
         <Modal show={this.state.showHandoffModal} onHide={this.closeHandoffModal}>
+
           <Modal.Header closeButton>
             <Modal.Title>Handoff next leg of race?</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <p>Warning! This CANNOT BE UNDONE. Please only click HANDOFF! a single time. If offline, the time and leg will be stored until you're online again.</p>
           </Modal.Body>
+
+
           <Modal.Footer>
             <Button block bsStyle='success' className='text-uppercase handoff-button' onClick={this.handoff}>HANDOFF!</Button>
             <Button block onClick={this.closeHandoffModal}>Cancel</Button>
@@ -147,7 +146,7 @@ export default class Tracker extends ParseComponent {
             <p>Nuclear option, huh? Do you really want to wipe all race data permanently?</p>
           </Modal.Body>
           <Modal.Footer>
-            <Button bsStyle='danger' block className='text-uppercase clear-button' onClick={this.clear}>Clear</Button>
+            {(_.get(this.data.race, 'raceEnd')) ? null : <Button bsStyle='danger' block className='text-uppercase clear-button' onClick={this.clear}>Clear</Button>}
             <Button block onClick={this.closeClearModal}>Cancel</Button>
           </Modal.Footer>
         </Modal>
@@ -231,6 +230,7 @@ export default class Tracker extends ParseComponent {
 
     // Stop if we're on the last
     if (previousLeg === legCount) {
+      this.setState({raceActive: false});
       ParseReact.Mutation.Set(this.data.race, {
         raceEnd: now
       }).dispatch({batch:batch});
