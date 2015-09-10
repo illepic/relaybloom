@@ -1,9 +1,9 @@
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var merge = require('webpack-merge');
 var webpack = require('webpack');
+var merge = require('webpack-merge');
 
-var TARGET = process.env.TARGET;
+var TARGET = process.env.npm_lifecycle_event;
 var ROOT_PATH = path.resolve(__dirname);
 
 var common = {
@@ -13,7 +13,6 @@ var common = {
   },
   output: {
     path: path.resolve(ROOT_PATH, 'build'),
-    publicPath: "/assets/",
     filename: 'bundle.js'
   },
   module: {
@@ -40,11 +39,39 @@ var common = {
     ]
   },
   plugins: [
-    //new HtmlWebpackPlugin({
-    //  title: 'relayBloom App'
-    //})
+    new HtmlWebpackPlugin({
+      title: 'relayBloom App'
+    })
   ]
 };
+
+if(TARGET === 'start' || !TARGET) {
+  module.exports = merge(common, {
+    //entry: [
+    //  'webpack-dev-server/client?http://localhost:8080',
+    //  'webpack/hot/dev-server'
+    //],
+    devtool: "eval-source-map",
+    devServer: {
+      historyApiFallback: true,
+      hot: true,
+      inline: true,
+      progress: true
+    },
+    plugins: [
+      new webpack.HotModuleReplacementPlugin()
+    ],
+    module: {
+      loaders: [
+        {
+          test: /\.jsx?$/,
+          loaders: ['react-hot', 'babel'],
+          include: path.resolve(ROOT_PATH, 'app')
+        }
+      ]
+    }
+  });
+}
 
 if(TARGET === 'build') {
   module.exports = merge(common, {
@@ -52,7 +79,7 @@ if(TARGET === 'build') {
       loaders: [
         {
           test: /\.jsx?$/,
-          loader: 'babel?stage=1',
+          loader: 'babel',
           include: path.resolve(ROOT_PATH, 'app')
         }
       ]
@@ -70,24 +97,5 @@ if(TARGET === 'build') {
         }
       })
     ]
-  });
-}
-
-if(TARGET === 'dev') {
-  module.exports = merge(common, {
-    entry: [
-      'webpack-dev-server/client?http://localhost:8080',
-      'webpack/hot/dev-server'
-    ],
-    devtool: "#eval-source-map",
-    module: {
-      loaders: [
-        {
-          test: /\.jsx?$/,
-          loaders: ['react-hot', 'babel?stage=1'],
-          include: path.resolve(ROOT_PATH, 'app')
-        }
-      ]
-    }
   });
 }

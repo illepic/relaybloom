@@ -104,6 +104,7 @@ export default class Tracker extends ParseComponent {
     return (
       <div className="RELAYbloomTracker tracker container">
 
+        <h1>what the shit</h1>
         <h2 className="text-center">
           <small>{_.get(this.data.race, 'raceName', '')}<br/>Race ID: {this.raceId}, Leg: {_.get(this.data.race, 'currentLeg')}</small>
           <br/>
