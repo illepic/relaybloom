@@ -18,16 +18,16 @@ var common = {
   },
   module: {
     loaders: [
-      {
-        // test for both js and jsx
-        test: /\.jsx?$/,
-
-        // use babel loader with Stage 1 features
-        loader: 'babel?stage=1',
-
-        // operate only on our app directory
-        include: path.resolve(ROOT_PATH, 'app')
-      },
+      //{
+      //  // test for both js and jsx
+      //  test: /\.jsx?$/,
+      //
+      //  // use babel loader with Stage 1 features
+      //  loader: 'babel?stage=1',
+      //
+      //  // operate only on our app directory
+      //  include: path.resolve(ROOT_PATH, 'app')
+      //},
       {
         test: /\.css$/,
         loaders: ['style', 'css']
@@ -79,11 +79,12 @@ if(TARGET === 'dev') {
       'webpack-dev-server/client?http://localhost:8080',
       'webpack/hot/dev-server'
     ],
+    devtool: "#eval-source-map",
     module: {
       loaders: [
         {
           test: /\.jsx?$/,
-          loaders: ['react-hot', 'babel?stage=1', 'flowcheck'],
+          loaders: ['react-hot', 'babel?stage=1'],
           include: path.resolve(ROOT_PATH, 'app')
         }
       ]
